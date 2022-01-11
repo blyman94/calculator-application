@@ -16,6 +16,11 @@ public class InputProcessor : MonoBehaviour
     public List<string> CurrentExpression { get; set; }
 
     /// <summary>
+    /// Determines if the current operand is the result of an operation.
+    /// </summary>
+    public bool IsResult { get; set; }
+
+    /// <summary>
     /// Tracks the number of unmatched left parenthesis in the current 
     /// expression.
     /// </summary>
@@ -125,8 +130,9 @@ public class InputProcessor : MonoBehaviour
                 }
                 else if (calculator.Operators.Contains(CurrentExpression.Last()))
                 {
-                    AddOperator(")");
-                    UnmatchedLeftParenCount--;
+                    AddOperator("*");
+                    AddOperator("(");
+                    UnmatchedLeftParenCount++;
                 }
             }
         }
@@ -171,7 +177,7 @@ public class InputProcessor : MonoBehaviour
         }
         else
         {
-            if (CurrentOperand == "0")
+            if (CurrentOperand == "0" || IsResult)
             {
                 CurrentOperand = input;
             }
@@ -181,8 +187,8 @@ public class InputProcessor : MonoBehaviour
             }
         }
 
+        IsResult = false;
         UpdateClearText();
-
         UpdateCurrentOperandText();
     }
 
@@ -199,6 +205,7 @@ public class InputProcessor : MonoBehaviour
         {
             CurrentOperand =
                 CurrentOperand.Substring(0, CurrentOperand.Length - 1);
+            IsResult = false;
             if (CurrentOperand == "")
             {
                 UpdateCurrentOperandText("0");
@@ -262,6 +269,7 @@ public class InputProcessor : MonoBehaviour
             CurrentExpression.Clear();
 
             CurrentOperand = result;
+            IsResult = true;
 
             UpdateCurrentOperandText();
             UpdateErrorText("");
@@ -308,8 +316,8 @@ public class InputProcessor : MonoBehaviour
 
     /// <summary>
     /// Resets the InputProcessor to its initial state, where the current 
-    /// operand and expression are empty, and the unmatched 
-    /// parenthesis count is 0.
+    /// operand and expression are empty, the current operand is not a result,
+    /// and the unmatched parenthesis count is 0.
     /// </summary>
     private void Reset()
     {
@@ -318,6 +326,7 @@ public class InputProcessor : MonoBehaviour
         UpdateCurrentOperandText("0");
         UpdateExpressionText();
         UpdateClearText();
+        IsResult = false;
         UnmatchedLeftParenCount = 0;
     }
 

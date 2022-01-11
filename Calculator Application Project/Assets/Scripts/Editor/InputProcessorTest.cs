@@ -107,7 +107,7 @@ public class InputProcessorTests
     }
 
     [Test]
-    public void AddParen_ExpressionEndsWithOperatorAndCurrentOperandNotEmpty_OperandAndRightParenAdded()
+    public void AddParen_ExpressionEndsWithOperatorAndCurrentOperandNotEmpty_ExplicitMultiplicationAdded()
     {
         GameObject go = new GameObject();
         InputProcessor inputProcessor = go.AddComponent<InputProcessor>();
@@ -117,7 +117,7 @@ public class InputProcessorTests
         inputProcessor.CurrentExpression = new List<string> { "(", "1", "+" };
         inputProcessor.AddParen();
 
-        Assert.AreEqual("( 1 + 5 )",
+        Assert.AreEqual("( 1 + 5 * (",
             string.Join(" ", inputProcessor.CurrentExpression));
     }
 
@@ -206,6 +206,18 @@ public class InputProcessorTests
         InputProcessor inputProcessor = go.AddComponent<InputProcessor>();
         inputProcessor.Initialize();
         inputProcessor.CurrentOperand = "0";
+        inputProcessor.AddToCurrentInput("5");
+        Assert.AreEqual("5", inputProcessor.CurrentOperand);
+    }
+
+    [Test]
+    public void AddToCurrentInput_InputIsIntegerAndCurrentOperandNotEmptyAndCurrentOperandIsResult_ChangeToInput()
+    {
+        GameObject go = new GameObject();
+        InputProcessor inputProcessor = go.AddComponent<InputProcessor>();
+        inputProcessor.Initialize();
+        inputProcessor.IsResult = true;
+        inputProcessor.CurrentOperand = "1";
         inputProcessor.AddToCurrentInput("5");
         Assert.AreEqual("5", inputProcessor.CurrentOperand);
     }
