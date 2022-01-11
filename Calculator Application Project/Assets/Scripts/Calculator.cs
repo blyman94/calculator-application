@@ -177,8 +177,8 @@ public class Calculator
 
                 if (operatorStack.IsEmpty())
                 {
-                    // throw new InvalidExpressionException("Infix " +
-                    //     "expression has mismatched parentheses.");
+                    throw new InvalidExpressionException("Infix " +
+                        "expression has mismatched parentheses.");
                 }
 
                 if (operatorStack.Peek() == "(")
@@ -211,8 +211,8 @@ public class Calculator
         {
             if (operatorStack.Peek() == "(" || operatorStack.Peek() == ")")
             {
-                // throw new InvalidExpressionException("Infix expression has " +
-                //     "mismatched parentheses.");
+                throw new InvalidExpressionException("Infix expression has " +
+                    "mismatched parentheses.");
             }
             resultList.Add(operatorStack.Pop());
         }
