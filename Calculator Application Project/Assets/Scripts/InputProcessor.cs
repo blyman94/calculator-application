@@ -6,6 +6,22 @@ using UnityEngine;
 public class InputProcessor : MonoBehaviour
 {
     /// <summary>
+    /// Operand the user is currently entering.
+    /// </summary>
+    public string CurrentOperand { get; set; }
+
+    /// <summary>
+    /// The expresison the user is currently building for evaluation.
+    /// </summary>
+    public List<string> CurrentExpression { get; set; }
+
+    /// <summary>
+    /// Tracks the number of unmatched left parenthesis in the current 
+    /// expression.
+    /// </summary>
+    public int UnmatchedLeftParenCount { get; set; }
+
+    /// <summary>
     /// Text object that displays the state of the clear button based on current
     /// input.
     /// </summary>
@@ -26,29 +42,18 @@ public class InputProcessor : MonoBehaviour
     /// </summary>
     private Calculator calculator;
 
-    /// <summary>
-    /// Operand the user is currently entering.
-    /// </summary>
-    private string currentOperand;
-
-    /// <summary>
-    /// The expresison the user is currently building for evaluation.
-    /// </summary>
-    private List<string> currentExpression;
-
-    /// <summary>
-    /// Tracks the number of unmatched left parenthesis in the current 
-    /// expression.
-    /// </summary>
-    private int unmatchedLeftParenCount;
-
     #region MonoBehaviour Methods
     private void Awake()
     {
+        Initialize();
+    }
+
+    public void Initialize()
+    {
         calculator = new Calculator();
-        currentOperand = "";
-        currentExpression = new List<string>();
-        unmatchedLeftParenCount = 0;
+        CurrentOperand = "";
+        CurrentExpression = new List<string>();
+        UnmatchedLeftParenCount = 0;
     }
     #endregion
 
@@ -61,14 +66,15 @@ public class InputProcessor : MonoBehaviour
     /// added to the current expression.</param>
     public void AddOperator(string operatorString)
     {
-        if (currentOperand != "")
+        if (CurrentOperand != "")
         {
-            currentExpression.Add(currentOperand);
+            CurrentExpression.Add(CurrentOperand);
         }
-        currentExpression.Add(operatorString);
+        CurrentExpression.Add(operatorString);
+
         UpdateExpressionText();
 
-        currentOperand = "";
+        CurrentOperand = "";
     }
 
     /// <summary>
@@ -77,56 +83,56 @@ public class InputProcessor : MonoBehaviour
     /// </summary>
     public void AddParen()
     {
-        if (currentExpression.IsEmpty())
+        if (CurrentExpression.IsEmpty())
         {
-            if (currentOperand != "")
+            if (CurrentOperand != "")
             {
                 AddOperator("*");
             }
 
             AddOperator("(");
-            unmatchedLeftParenCount++;
+            UnmatchedLeftParenCount++;
         }
         else
         {
-            if (currentOperand == "")
+            if (CurrentOperand == "")
             {
-                if (currentExpression.Last() == "(")
+                if (CurrentExpression.Last() == "(")
                 {
                     AddOperator("(");
-                    unmatchedLeftParenCount++;
+                    UnmatchedLeftParenCount++;
                 }
-                else if (currentExpression.Last() == ")")
+                else if (CurrentExpression.Last() == ")")
                 {
-                    if (unmatchedLeftParenCount > 0)
+                    if (UnmatchedLeftParenCount > 0)
                     {
                         AddOperator(")");
-                        unmatchedLeftParenCount--;
+                        UnmatchedLeftParenCount--;
                     }
                     else
                     {
                         AddOperator("*");
                         AddOperator("(");
-                        unmatchedLeftParenCount++;
+                        UnmatchedLeftParenCount++;
                     }
                 }
-                else if (calculator.Operators.Contains(currentExpression.Last()))
+                else if (calculator.Operators.Contains(CurrentExpression.Last()))
                 {
                     AddOperator("(");
-                    unmatchedLeftParenCount++;
+                    UnmatchedLeftParenCount++;
                 }
             }
             else
             {
-                if (currentExpression.Last() == "(")
+                if (CurrentExpression.Last() == "(")
                 {
                     AddOperator(")");
-                    unmatchedLeftParenCount--;
+                    UnmatchedLeftParenCount--;
                 }
-                else if (calculator.Operators.Contains(currentExpression.Last()))
+                else if (calculator.Operators.Contains(CurrentExpression.Last()))
                 {
                     AddOperator(")");
-                    unmatchedLeftParenCount--;
+                    UnmatchedLeftParenCount--;
                 }
             }
         }
@@ -143,45 +149,47 @@ public class InputProcessor : MonoBehaviour
     {
         if (input == ".")
         {
-            if (currentOperand == "")
+            if (CurrentOperand == "")
             {
-                currentOperand = "0.";
+                CurrentOperand = "0.";
             }
             else
             {
-                if (!currentOperand.Contains("."))
+                if (!CurrentOperand.Contains("."))
                 {
-                    currentOperand += input;
+                    CurrentOperand += input;
                 }
             }
         }
         else if (input == "0")
         {
-            if (currentOperand == "")
+            if (CurrentOperand == "")
             {
-                currentOperand = "0";
+                CurrentOperand = "0";
             }
             else
             {
-                if (!(currentOperand == "0"))
+                if (!(CurrentOperand == "0"))
                 {
-                    currentOperand += input;
+                    CurrentOperand += input;
                 }
             }
         }
         else
         {
-            if (currentOperand == "0")
+            if (CurrentOperand == "0")
             {
-                currentOperand = input;
+                CurrentOperand = input;
             }
             else
             {
-                currentOperand += input;
+                CurrentOperand += input;
             }
         }
+
         UpdateClearText();
-        currentOperandText.text = currentOperand;
+
+        UpdateCurrentOperandText();
     }
 
     /// <summary>
@@ -189,22 +197,22 @@ public class InputProcessor : MonoBehaviour
     /// </summary>
     public void Backspace()
     {
-        if (currentOperand == "")
+        if (CurrentOperand == "")
         {
-            currentOperandText.text = "0";
+            UpdateCurrentOperandText("0");
         }
         else
         {
-            currentOperand =
-                currentOperand.Substring(0, currentOperand.Length - 1);
-            if (currentOperand == "")
+            CurrentOperand =
+                CurrentOperand.Substring(0, CurrentOperand.Length - 1);
+            if (CurrentOperand == "")
             {
-                currentOperandText.text = "0";
+                UpdateCurrentOperandText("0");
                 UpdateClearText();
             }
             else
             {
-                currentOperandText.text = currentOperand;
+                UpdateCurrentOperandText();
             }
         }
     }
@@ -216,24 +224,23 @@ public class InputProcessor : MonoBehaviour
     /// </summary>
     public void ClearInput()
     {
-        if (currentOperand == "")
+        if (CurrentOperand == "")
         {
-            if (currentOperandText.text != "0")
+            if (currentOperandText != null && currentOperandText.text != "0")
             {
-                currentOperandText.text = "0";
-
+                UpdateCurrentOperandText("0");
             }
             else
             {
-                currentExpressionText.text = "";
-                currentExpression.Clear();
-                unmatchedLeftParenCount = 0;
+                CurrentExpression.Clear();
+                UpdateExpressionText("");
+                UnmatchedLeftParenCount = 0;
             }
         }
         else
         {
-            currentOperand = "";
-            currentOperandText.text = "0";
+            CurrentOperand = "";
+            UpdateCurrentOperandText("0");
         }
         UpdateClearText();
     }
@@ -244,19 +251,23 @@ public class InputProcessor : MonoBehaviour
     /// </summary>
     public void Execute()
     {
-        if (currentOperand != "")
+        if (CurrentOperand != "")
         {
-            currentExpression.Add(currentOperand);
+            CurrentExpression.Add(CurrentOperand);
         }
 
         string result =
-            calculator.AcceptInputArray(currentExpression.ToArray());
+            calculator.AcceptInputArray(CurrentExpression.ToArray());
 
-        currentExpressionText.text = string.Join(" ", currentExpression) + "=";
-        currentExpression.Clear();
+        if (currentExpressionText != null)
+        {
+            UpdateExpressionText(string.Join(" ", CurrentExpression) + "=");
+        }
+        CurrentExpression.Clear();
 
-        currentOperand = result;
-        currentOperandText.text = result;
+        CurrentOperand = result;
+
+        UpdateCurrentOperandText();
     }
 
     /// <summary>
@@ -265,17 +276,19 @@ public class InputProcessor : MonoBehaviour
     /// </summary>
     public void ToggleNegative()
     {
-        if (!(currentOperand == ""))
+        if (!(CurrentOperand == ""))
         {
-            if (currentOperand.Substring(0, 1) != "-")
+            if (CurrentOperand.Substring(0, 1) != "-")
             {
-                currentOperand = "-" + currentOperand;
+                CurrentOperand = "-" + CurrentOperand;
             }
             else
             {
-                currentOperand = currentOperand.Substring(1, currentOperand.Length);
+                CurrentOperand = 
+                    CurrentOperand.Substring(1, CurrentOperand.Length - 1);
             }
-            currentOperandText.text = currentOperand;
+
+            UpdateCurrentOperandText();
         }
     }
 
@@ -291,13 +304,41 @@ public class InputProcessor : MonoBehaviour
     /// </summary>
     private void UpdateClearText()
     {
-        if (currentOperand == "")
+        if (clearAllClearText != null)
         {
-            clearAllClearText.text = "C";
+            if (CurrentOperand == "")
+            {
+                clearAllClearText.text = "C";
+            }
+            else
+            {
+                clearAllClearText.text = "CE";
+            }
         }
-        else
+    }
+
+    /// <summary>
+    /// Updates the GUI to reflect the current operand string.
+    /// </summary>
+    private void UpdateCurrentOperandText()
+    {
+        if (currentOperandText != null)
         {
-            clearAllClearText.text = "CE";
+            currentOperandText.text = CurrentOperand;
+        }
+    }
+
+    /// <summary>
+    /// Overload for the UpdateCurrentOpreandText method that accepts a string
+    /// and sets the GUI operand text to reflect the passed string.
+    /// </summary>
+    /// <param name="newText">String to display as current operand in the GUI.
+    /// </param>
+    private void UpdateCurrentOperandText(string newText)
+    {
+        if (currentOperandText != null)
+        {
+            currentOperandText.text = newText;
         }
     }
 
@@ -306,6 +347,22 @@ public class InputProcessor : MonoBehaviour
     /// </summary>
     private void UpdateExpressionText()
     {
-        currentExpressionText.text = string.Join(" ", currentExpression);
+        if (currentExpressionText != null)
+        {
+            currentExpressionText.text = string.Join(" ", CurrentExpression);
+        }
+    }
+
+    /// <summary>
+    /// Overload for the UpdateExpressionText method that accepts a string
+    /// and sets the GUI expression text to reflect the passed string.
+    /// </summary>
+    /// <param name="newText">String to display as current expression.</param>
+    private void UpdateExpressionText(string newText)
+    {
+        if (currentExpressionText != null)
+        {
+            currentExpressionText.text = newText;
+        }
     }
 }

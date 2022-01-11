@@ -160,8 +160,6 @@ public class Calculator
             bool isOperand = float.TryParse(token, out float operand);
             bool isOperator = Operators.Contains(token);
 
-            Debug.Log("Token: " + token + " - IsOperand: " + isOperand + " - IsOperator: " + isOperator);
-
             if (isOperand)
             {
                 resultList.Add(token);
