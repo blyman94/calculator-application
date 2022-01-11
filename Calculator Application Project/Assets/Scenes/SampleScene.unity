@@ -2654,7 +2654,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 213.8
+  m_fontSize: 215.95
   m_fontSizeBase: 224
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -7039,6 +7039,7 @@ MonoBehaviour:
   clearAllClearText: {fileID: 905590097}
   currentExpressionText: {fileID: 1131390176}
   currentOperandText: {fileID: 377253211}
+  errorDisplayText: {fileID: 1872671157}
 --- !u!1 &1510191317
 GameObject:
   m_ObjectHideFlags: 0

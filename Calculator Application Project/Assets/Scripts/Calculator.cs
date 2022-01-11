@@ -1,7 +1,4 @@
-using System;
-using System.Collections;
 using System.Collections.Generic;
-using TMPro;
 using UnityEngine;
 
 /// <summary>
@@ -76,20 +73,12 @@ public class Calculator
     /// expression.</returns>
     public string EvaluatePostfixExpression(string[] postfixExpression)
     {
-        //InputValidator.ValidateInputCharacters(postfixExpression);
-
         Stack<float> operandStack = new Stack<float>();
 
         foreach (string token in postfixExpression)
         {
             bool isOperand = float.TryParse(token, out float operand);
             bool isOperator = Operators.Contains(token);
-
-            if (!isOperand && !isOperator)
-            {
-                // throw new InvalidTokenException($"{token} is neither an " +
-                //     "operator nor an operand.");
-            }
 
             if (isOperand)
             {
@@ -120,11 +109,8 @@ public class Calculator
                         break;
                     default:
                         // The default condition should never occur, as inputs
-                        // are validated prior to postfix evaluation.
-                        // throw new InvalidExpressionException("Postix " +
-                        //     "expression " +
-                        //     $"{String.Join(" ", postfixExpression)} is not a " +
-                        //     "valid expression.");
+                        // are validated (either implicitly or explicitly) prior 
+                        // to postfix evaluation.
                         operationResult = 0.0f;
                         break;
                 }
@@ -148,9 +134,6 @@ public class Calculator
     /// infix expression passed as a parameter.</returns>
     public string[] InfixToPostfix(string[] infixExpression)
     {
-        // InputValidator.ValidateInputCharacters(infixExpression);
-        // InputValidator.ValidateOperatorOrder(infixExpression);
-
         Stack<string> operatorStack = new Stack<string>();
         List<string> resultList = new List<string>();
 
@@ -177,8 +160,8 @@ public class Calculator
 
                 if (operatorStack.IsEmpty())
                 {
-                    throw new InvalidExpressionException("Infix " +
-                        "expression has mismatched parentheses.");
+                    throw new InvalidExpressionException("Syntax Error: " + 
+                        "Infix expression has mismatched parentheses.");
                 }
 
                 if (operatorStack.Peek() == "(")
@@ -211,8 +194,8 @@ public class Calculator
         {
             if (operatorStack.Peek() == "(" || operatorStack.Peek() == ")")
             {
-                throw new InvalidExpressionException("Infix expression has " +
-                    "mismatched parentheses.");
+                throw new InvalidExpressionException("Syntax Error: Infix " + 
+                    "expression has mismatched parentheses.");
             }
             resultList.Add(operatorStack.Pop());
         }

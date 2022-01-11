@@ -37,6 +37,8 @@ public class InputProcessor : MonoBehaviour
     /// </summary>
     [SerializeField] private TextMeshProUGUI currentOperandText;
 
+    [SerializeField] private TextMeshProUGUI errorDisplayText;
+
     /// <summary>
     /// Calculator object to evaluate infix expressions.
     /// </summary>
@@ -46,14 +48,6 @@ public class InputProcessor : MonoBehaviour
     private void Awake()
     {
         Initialize();
-    }
-
-    public void Initialize()
-    {
-        calculator = new Calculator();
-        CurrentOperand = "";
-        CurrentExpression = new List<string>();
-        UnmatchedLeftParenCount = 0;
     }
     #endregion
 
@@ -251,23 +245,43 @@ public class InputProcessor : MonoBehaviour
     /// </summary>
     public void Execute()
     {
-        if (CurrentOperand != "")
+        try
         {
-            CurrentExpression.Add(CurrentOperand);
+            if (CurrentOperand != "")
+            {
+                CurrentExpression.Add(CurrentOperand);
+            }
+
+            string result =
+                calculator.AcceptInputArray(CurrentExpression.ToArray());
+
+            if (currentExpressionText != null)
+            {
+                UpdateExpressionText(string.Join(" ", CurrentExpression) + "=");
+            }
+            CurrentExpression.Clear();
+
+            CurrentOperand = result;
+
+            UpdateCurrentOperandText();
+            UpdateErrorText("");
         }
-
-        string result =
-            calculator.AcceptInputArray(CurrentExpression.ToArray());
-
-        if (currentExpressionText != null)
+        catch (CalculatorException e)
         {
-            UpdateExpressionText(string.Join(" ", CurrentExpression) + "=");
+            UpdateErrorText(e.Message);
+            Reset();
         }
-        CurrentExpression.Clear();
+    }
 
-        CurrentOperand = result;
-
-        UpdateCurrentOperandText();
+    /// <summary>
+    /// Initializes the calculator and resets the InputProcessor to an initial 
+    /// state.
+    /// </summary>
+    public void Initialize()
+    {
+        calculator = new Calculator();
+        UpdateErrorText("");
+        Reset();
     }
 
     /// <summary>
@@ -284,12 +298,27 @@ public class InputProcessor : MonoBehaviour
             }
             else
             {
-                CurrentOperand = 
+                CurrentOperand =
                     CurrentOperand.Substring(1, CurrentOperand.Length - 1);
             }
 
             UpdateCurrentOperandText();
         }
+    }
+
+    /// <summary>
+    /// Resets the InputProcessor to its initial state, where the current 
+    /// operand and expression are empty, and the unmatched 
+    /// parenthesis count is 0.
+    /// </summary>
+    private void Reset()
+    {
+        CurrentOperand = "";
+        CurrentExpression = new List<string>();
+        UpdateCurrentOperandText("0");
+        UpdateExpressionText();
+        UpdateClearText();
+        UnmatchedLeftParenCount = 0;
     }
 
     /// <summary>
@@ -339,6 +368,18 @@ public class InputProcessor : MonoBehaviour
         if (currentOperandText != null)
         {
             currentOperandText.text = newText;
+        }
+    }
+
+    /// <summary>
+    /// Updates the calculator's error display to reflect the passed message.
+    /// </summary>
+    /// <param name="errorMessage"></param>
+    private void UpdateErrorText(string errorMessage)
+    {
+        if (errorDisplayText != null)
+        {
+            errorDisplayText.text = errorMessage;
         }
     }
 
