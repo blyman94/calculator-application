@@ -3,8 +3,45 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
+// TODO: Create InputRelay class that sits between the GUI and the input 
+// processors decides which of the processors will be receiving input from the 
+// GUI.
+
+// TODO: Rename and better document this class.
+// TODO: This class is enormous, look for ways to refactor.
+
+/// <summary>
+/// Receives input from the calculator GUI to use in infix expression evaluation.
+/// </summary>
 public class InputProcessor : MonoBehaviour
 {
+    #region Delegates
+    /// <summary>
+    /// Delegate to signal an update to the clear button.
+    /// </summary>
+    public UpdateClear UpdateClear;
+
+    /// <summary>
+    /// Delegate to signal a current operand update.
+    /// </summary>
+    public UpdateCurrentOperand UpdateCurrentOperand;
+
+    /// <summary>
+    /// Delegate to signal a current expression update.
+    /// </summary>
+    public UpdateCurrentExpression UpdateCurrentExpression;
+
+    /// <summary>
+    /// Delegate to signal an error update.
+    /// </summary>
+    public UpdateError UpdateError;
+    #endregion
+
+    /// <summary>
+    /// True if the calculator has already been cleared once.
+    /// </summary>
+    public bool ClearedOnce { get; set; }
+    
     /// <summary>
     /// Operand the user is currently entering.
     /// </summary>
@@ -25,24 +62,6 @@ public class InputProcessor : MonoBehaviour
     /// expression.
     /// </summary>
     public int UnmatchedLeftParenCount { get; set; }
-
-    /// <summary>
-    /// Text object that displays the state of the clear button based on current
-    /// input.
-    /// </summary>
-    [SerializeField] private TextMeshProUGUI clearAllClearText;
-
-    /// <summary>
-    /// Text object that displays the expression the user is currently entering.
-    /// </summary>
-    [SerializeField] private TextMeshProUGUI currentExpressionText;
-
-    /// <summary>
-    /// Text object that displays the operand the user is currently entering.
-    /// </summary>
-    [SerializeField] private TextMeshProUGUI currentOperandText;
-
-    [SerializeField] private TextMeshProUGUI errorDisplayText;
 
     /// <summary>
     /// Calculator object to evaluate infix expressions.
@@ -71,7 +90,7 @@ public class InputProcessor : MonoBehaviour
         }
         CurrentExpression.Add(operatorString);
 
-        UpdateExpressionText();
+        UpdateCurrentExpression?.Invoke(string.Join(" ", CurrentExpression));
 
         CurrentOperand = "";
     }
@@ -137,7 +156,7 @@ public class InputProcessor : MonoBehaviour
             }
         }
 
-        UpdateExpressionText();
+        UpdateCurrentExpression?.Invoke(string.Join(" ", CurrentExpression));
     }
 
     /// <summary>
@@ -188,8 +207,9 @@ public class InputProcessor : MonoBehaviour
         }
 
         IsResult = false;
-        UpdateClearText();
-        UpdateCurrentOperandText();
+
+        UpdateClear?.Invoke(CurrentOperand);
+        UpdateCurrentOperand?.Invoke(CurrentOperand);
     }
 
     /// <summary>
@@ -199,7 +219,7 @@ public class InputProcessor : MonoBehaviour
     {
         if (CurrentOperand == "")
         {
-            UpdateCurrentOperandText("0");
+            UpdateCurrentOperand?.Invoke("0");
         }
         else
         {
@@ -208,12 +228,12 @@ public class InputProcessor : MonoBehaviour
             IsResult = false;
             if (CurrentOperand == "")
             {
-                UpdateCurrentOperandText("0");
-                UpdateClearText();
+                UpdateCurrentOperand?.Invoke("0");
+                UpdateClear?.Invoke(CurrentOperand);
             }
             else
             {
-                UpdateCurrentOperandText();
+                UpdateCurrentOperand?.Invoke(CurrentOperand);
             }
         }
     }
@@ -227,23 +247,27 @@ public class InputProcessor : MonoBehaviour
     {
         if (CurrentOperand == "")
         {
-            if (currentOperandText != null && currentOperandText.text != "0")
+            if (!ClearedOnce)
             {
-                UpdateCurrentOperandText("0");
+                UpdateCurrentOperand?.Invoke("0");
+                ClearedOnce = true;
             }
             else
             {
                 CurrentExpression.Clear();
-                UpdateExpressionText("");
+                UpdateCurrentExpression?.Invoke("");
                 UnmatchedLeftParenCount = 0;
+                ClearedOnce = false;
             }
         }
         else
         {
             CurrentOperand = "";
-            UpdateCurrentOperandText("0");
+            UpdateCurrentOperand?.Invoke("0");
+            ClearedOnce = true;
         }
-        UpdateClearText();
+
+        UpdateClear?.Invoke(CurrentOperand);
     }
 
     /// <summary>
@@ -262,21 +286,19 @@ public class InputProcessor : MonoBehaviour
             string result =
                 calculator.AcceptInputArray(CurrentExpression.ToArray());
 
-            if (currentExpressionText != null)
-            {
-                UpdateExpressionText(string.Join(" ", CurrentExpression) + "=");
-            }
+            UpdateCurrentExpression?.Invoke(string.Join(" ",
+                CurrentExpression) + "=");
             CurrentExpression.Clear();
 
             CurrentOperand = result;
             IsResult = true;
 
-            UpdateCurrentOperandText();
-            UpdateErrorText("");
+            UpdateCurrentOperand?.Invoke(CurrentOperand);
+            UpdateError?.Invoke("");
         }
         catch (CalculatorException e)
         {
-            UpdateErrorText(e.Message);
+            UpdateError?.Invoke(e.Message);
             Reset();
         }
     }
@@ -288,7 +310,7 @@ public class InputProcessor : MonoBehaviour
     public void Initialize()
     {
         calculator = new Calculator();
-        UpdateErrorText("");
+        UpdateError?.Invoke("");
         Reset();
     }
 
@@ -310,7 +332,7 @@ public class InputProcessor : MonoBehaviour
                     CurrentOperand.Substring(1, CurrentOperand.Length - 1);
             }
 
-            UpdateCurrentOperandText();
+            UpdateCurrentOperand?.Invoke(CurrentOperand);
         }
     }
 
@@ -321,98 +343,13 @@ public class InputProcessor : MonoBehaviour
     /// </summary>
     private void Reset()
     {
+        ClearedOnce = false;
         CurrentOperand = "";
         CurrentExpression = new List<string>();
-        UpdateCurrentOperandText("0");
-        UpdateExpressionText();
-        UpdateClearText();
+        UpdateCurrentOperand?.Invoke("0");
+        UpdateCurrentExpression?.Invoke("");
+        UpdateClear?.Invoke(CurrentOperand);
         IsResult = false;
         UnmatchedLeftParenCount = 0;
-    }
-
-    /// <summary>
-    /// Updates the text on the GUI's clear button to better describe its 
-    /// behavior in different scenarios. Pressing the clear button when a 
-    /// current operand exists will only clear the operand (referred to as
-    /// "clear entry" and represented by "CE"). Pressing the clear button when a
-    /// current operand does not exist and an expression exists will clear the
-    /// expression (referred to as "clear all" and represented by "C".) If no
-    /// operand nor expression exists, the button will default to the clear
-    /// behavior.
-    /// </summary>
-    private void UpdateClearText()
-    {
-        if (clearAllClearText != null)
-        {
-            if (CurrentOperand == "")
-            {
-                clearAllClearText.text = "C";
-            }
-            else
-            {
-                clearAllClearText.text = "CE";
-            }
-        }
-    }
-
-    /// <summary>
-    /// Updates the GUI to reflect the current operand string.
-    /// </summary>
-    private void UpdateCurrentOperandText()
-    {
-        if (currentOperandText != null)
-        {
-            currentOperandText.text = CurrentOperand;
-        }
-    }
-
-    /// <summary>
-    /// Overload for the UpdateCurrentOpreandText method that accepts a string
-    /// and sets the GUI operand text to reflect the passed string.
-    /// </summary>
-    /// <param name="newText">String to display as current operand in the GUI.
-    /// </param>
-    private void UpdateCurrentOperandText(string newText)
-    {
-        if (currentOperandText != null)
-        {
-            currentOperandText.text = newText;
-        }
-    }
-
-    /// <summary>
-    /// Updates the calculator's error display to reflect the passed message.
-    /// </summary>
-    /// <param name="errorMessage"></param>
-    private void UpdateErrorText(string errorMessage)
-    {
-        if (errorDisplayText != null)
-        {
-            errorDisplayText.text = errorMessage;
-        }
-    }
-
-    /// <summary>
-    /// Updates the current expression text to reflect the expression entered.
-    /// </summary>
-    private void UpdateExpressionText()
-    {
-        if (currentExpressionText != null)
-        {
-            currentExpressionText.text = string.Join(" ", CurrentExpression);
-        }
-    }
-
-    /// <summary>
-    /// Overload for the UpdateExpressionText method that accepts a string
-    /// and sets the GUI expression text to reflect the passed string.
-    /// </summary>
-    /// <param name="newText">String to display as current expression.</param>
-    private void UpdateExpressionText(string newText)
-    {
-        if (currentExpressionText != null)
-        {
-            currentExpressionText.text = newText;
-        }
     }
 }

@@ -1,0 +1,1 @@
+public delegate void UpdateClear(string currentOperandString);

@@ -270,14 +270,28 @@ public class InputProcessorTests
 
     #region ClearInput Tests
     [Test]
-    public void ClearInput_CurrentOperandEmpty_ClearsExpression()
+    public void ClearInput_CurrentOperandEmptyAndClearedOnce_ClearsExpression()
     {
         GameObject go = new GameObject();
         InputProcessor inputProcessor = go.AddComponent<InputProcessor>();
         inputProcessor.Initialize();
         inputProcessor.CurrentExpression = new List<string>() { "1", "+", "2" };
+        inputProcessor.CurrentOperand = "";
+        inputProcessor.ClearedOnce = true;
         inputProcessor.ClearInput();
         Assert.AreEqual(0, inputProcessor.CurrentExpression.Count);
+    }
+
+    [Test]
+    public void ClearInput_CurrentOperandEmptyAndNotClearedOnce_ClearsOperand()
+    {
+        GameObject go = new GameObject();
+        InputProcessor inputProcessor = go.AddComponent<InputProcessor>();
+        inputProcessor.Initialize();
+        inputProcessor.CurrentOperand = "";
+        inputProcessor.ClearedOnce = false;
+        inputProcessor.ClearInput();
+        Assert.AreEqual("", inputProcessor.CurrentOperand);
     }
 
     [Test]
