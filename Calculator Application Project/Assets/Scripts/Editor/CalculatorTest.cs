@@ -1,6 +1,9 @@
 using System.Collections.Generic;
 using NUnit.Framework;
 
+/// <summary>
+/// Collection of unit tests for the Calculator class.
+/// </summary>
 public class CalculatorTest
 {
     #region EvaluatePostfixExpression Tests

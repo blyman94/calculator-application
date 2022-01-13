@@ -140,8 +140,8 @@ public class PythagoreanSolve : ScriptableObject, ICustomOperation
 
             if (a > c)
             {
-                throw new InvalidTriangleException("Length of leg a is " +
-                    "greater than length of hypotenuse.");
+                throw new InvalidTriangleException("Invalid Triangle: Length " +
+                    "of leg a is greater than length of hypotenuse.");
             }
 
             float aSqr = Mathf.Pow(a, 2);
@@ -171,7 +171,7 @@ public class PythagoreanSolve : ScriptableObject, ICustomOperation
         {
             // a, b, and c are all populated. Therefore, too many inputs have
             // been given for this operation.
-            
+
             throw new InvalidInputException("Invalid Inputs: Too many " +
                 "inputs given for Pythagorean Solve operation.");
         }

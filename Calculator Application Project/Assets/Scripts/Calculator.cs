@@ -43,9 +43,6 @@ public class Calculator
     public Calculator()
     {
         CurrentValue = 0;
-        precedence = new Dictionary<string, int>();
-        leftAssociative = new Dictionary<string, bool>();
-
         AssignPrecedenceValues();
         AssignLeftAssociativeValues();
     }
@@ -209,6 +206,8 @@ public class Calculator
     /// </summary>
     private void AssignLeftAssociativeValues()
     {
+        leftAssociative = new Dictionary<string, bool>();
+        
         leftAssociative.Add("^", false);
         leftAssociative.Add("*", true);
         leftAssociative.Add("/", true);
@@ -223,6 +222,8 @@ public class Calculator
     /// </summary>
     private void AssignPrecedenceValues()
     {
+        precedence = new Dictionary<string, int>();
+
         precedence.Add("^", 4);
         precedence.Add("*", 3);
         precedence.Add("/", 3);

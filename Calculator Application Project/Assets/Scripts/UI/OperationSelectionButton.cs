@@ -7,12 +7,14 @@ using UnityEngine;
 /// </summary>
 public class OperationSelectionButton : MonoBehaviour
 {
+    [Header("Events")]
     /// <summary>
     /// Used to signal that the user has selected a custom operation.
     /// </summary>
     [Tooltip("Used to signal that the user has selected a custom operation.")]
     [SerializeField] private CustomOperationEvent customOperationEvent;
 
+    [Header("GUI Elements")]
     /// <summary>
     /// Text that will display the name of the operation being selected.
     /// </summary>
@@ -46,6 +48,9 @@ public class OperationSelectionButton : MonoBehaviour
     /// </summary>
     public void RaiseCustomOperationEvent()
     {
-        customOperationEvent.Raise(CustomOperation);
+        if (customOperationEvent != null && CustomOperation != null)
+        {
+            customOperationEvent.Raise(CustomOperation);
+        }
     }
 }

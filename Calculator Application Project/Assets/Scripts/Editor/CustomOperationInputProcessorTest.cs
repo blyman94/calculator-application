@@ -1,8 +1,10 @@
-using System.Collections.Generic;
 using NUnit.Framework;
 using UnityEngine;
 using NSubstitute;
 
+/// <summary>
+/// Collection of unit tests for the CustomOperationInputProcessor class.
+/// </summary>
 public class CustomOperationInputProcessorTest
 {
     #region AddToCurrentInput Tests

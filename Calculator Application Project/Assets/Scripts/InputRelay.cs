@@ -17,14 +17,17 @@ public class InputRelay : MonoBehaviour
     /// </summary>
     public bool IsCustomOperationSelection { get; set; }
 
+    [Header("Input Processors")]
     /// <summary>
-    /// Input processor for regular infix expression evaluation operations.
+    /// TODO: Input processor for regular infix expression evaluation operations.
     /// </summary>
+    [Tooltip("Input processor for regular infix expression evaluation operations.")]
     [SerializeField] private InputProcessor inputProcessor;
 
     /// <summary>
     /// Custom operation input processor for all custom operations.
     /// </summary>
+    [Tooltip("Custom operation input processor for all custom operations.")]
     [SerializeField] private CustomOperationInputProcessor customOpProcessor;
 
     #region MonoBehaviour Methods
@@ -50,7 +53,10 @@ public class InputRelay : MonoBehaviour
             return;
         }
 
-        inputProcessor.AddOperator(operatorString);
+        if (inputProcessor != null)
+        {
+            inputProcessor.AddOperator(operatorString);
+        }
     }
 
     /// <summary>
@@ -66,7 +72,10 @@ public class InputRelay : MonoBehaviour
             return;
         }
 
-        inputProcessor.AddParen();
+        if (inputProcessor != null)
+        {
+            inputProcessor.AddParen();
+        }
     }
 
     /// <summary>
@@ -85,11 +94,17 @@ public class InputRelay : MonoBehaviour
 
         if (IsCustomOperation)
         {
-            customOpProcessor.AddToCurrentInput(input);
+            if (customOpProcessor != null)
+            {
+                customOpProcessor.AddToCurrentInput(input);
+            }
         }
         else
         {
-            inputProcessor.AddToCurrentInput(input);
+            if (inputProcessor != null)
+            {
+                inputProcessor.AddToCurrentInput(input);
+            }
         }
     }
 
@@ -106,11 +121,17 @@ public class InputRelay : MonoBehaviour
 
         if (IsCustomOperation)
         {
-            customOpProcessor.Backspace();
+            if (customOpProcessor != null)
+            {
+                customOpProcessor.Backspace();
+            }
         }
         else
         {
-            inputProcessor.Backspace();
+            if (inputProcessor != null)
+            {
+                inputProcessor.Backspace();
+            }
         }
     }
 
@@ -127,11 +148,17 @@ public class InputRelay : MonoBehaviour
 
         if (IsCustomOperation)
         {
-            customOpProcessor.ClearInput();
+            if (customOpProcessor != null)
+            {
+                customOpProcessor.ClearInput();
+            }
         }
         else
         {
-            inputProcessor.ClearInput();
+            if (inputProcessor != null)
+            {
+                inputProcessor.ClearInput();
+            }
         }
     }
 
@@ -148,11 +175,18 @@ public class InputRelay : MonoBehaviour
 
         if (IsCustomOperation)
         {
-            customOpProcessor.Enter();
+            if (customOpProcessor != null)
+            {
+                customOpProcessor.Enter();
+            }
+
         }
         else
         {
-            inputProcessor.Execute();
+            if (inputProcessor != null)
+            {
+                inputProcessor.Execute();
+            }
         }
     }
 
@@ -169,11 +203,17 @@ public class InputRelay : MonoBehaviour
 
         if (IsCustomOperation)
         {
-            customOpProcessor.ToggleNegative();
+            if (customOpProcessor != null)
+            {
+                customOpProcessor.ToggleNegative();
+            }
         }
         else
         {
-            inputProcessor.ToggleNegative();
+            if (inputProcessor != null)
+            {
+                inputProcessor.ToggleNegative();
+            }   
         }
     }
 }

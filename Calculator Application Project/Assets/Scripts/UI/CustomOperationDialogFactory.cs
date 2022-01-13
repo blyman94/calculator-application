@@ -12,7 +12,8 @@ public class CustomOperationDialogFactory : MonoBehaviour
     /// <summary>
     /// Object pooler for ArgumentDisplayPrefabs.
     /// </summary>
-    [SerializeField] private ObjectPooler ArgumentDisplayPooler;
+    [Tooltip("Object pooler for ArgumentDisplayPrefabs.")]
+    [SerializeField] private ObjectPooler argumentDisplayPooler;
 
     /// <summary>
     /// Custom input processor that will drive GUI updates during the custom
@@ -23,14 +24,7 @@ public class CustomOperationDialogFactory : MonoBehaviour
         "the custom operation execution.")]
     private CustomOperationInputProcessor customOperationInputProcessor;
 
-    /// <summary>
-    /// Prefab representing an argument display to be shown in the custom 
-    /// operation dialog.
-    /// </summary>
-    [Tooltip("Prefab representing an argument display to be shown in the " +
-        " custom operation dialog.")]
-    [SerializeField] private GameObject argumentDisplayPrefab;
-
+    [Header("GUI Elements")]
     /// <summary>
     /// Transform whose children will represent custom operation arguments.
     /// </summary>
@@ -39,18 +33,11 @@ public class CustomOperationDialogFactory : MonoBehaviour
     [SerializeField] private RectTransform argumentContentTransform;
 
     /// <summary>
-    /// Text object representing the title of the custom operation dialog.
-    /// </summary>
-    [Tooltip("Text object representing the title of the custom operation " +
-        "dialog.")]
-    [SerializeField] TextMeshProUGUI titleText;
-
-    /// <summary>
     /// Text object representing the description of the custom operation dialog.
     /// </summary>
     [Tooltip("Text object representing the description of the custom " +
         "operation dialog.")]
-    [SerializeField] TextMeshProUGUI descriptionText;
+    [SerializeField] private TextMeshProUGUI descriptionText;
 
     // <summary>
     /// Text object representing the instructions of the custom operation 
@@ -58,19 +45,29 @@ public class CustomOperationDialogFactory : MonoBehaviour
     /// </summary>
     [Tooltip("Text object representing the instructions of the custom " +
         "operation dialog.")]
-    [SerializeField] TextMeshProUGUI instructionText;
+    [SerializeField] private TextMeshProUGUI instructionText;
+
+    /// <summary>
+    /// Text object representing the title of the custom operation dialog.
+    /// </summary>
+    [Tooltip("Text object representing the title of the custom operation " +
+        "dialog.")]
+    [SerializeField] private TextMeshProUGUI titleText;
 
     /// <summary>
     /// List of argument display objects that will allow the user to enter 
     /// arguments for the custom operation.
     /// </summary>
-    private List<ArgumentDisplay> argumentDisplays =
-        new List<ArgumentDisplay>();
+    private List<ArgumentDisplay> argumentDisplays;
 
     #region MonoBehaviour Methods
     private void Start()
     {
-        ArgumentDisplayPooler.InitializePool(argumentContentTransform);
+        argumentDisplays = new List<ArgumentDisplay>();
+        if (argumentDisplayPooler != null && argumentContentTransform != null)
+        {
+            argumentDisplayPooler.InitializePool(argumentContentTransform);
+        }
     }
     #endregion
 
@@ -84,28 +81,45 @@ public class CustomOperationDialogFactory : MonoBehaviour
     {
         argumentDisplays.Clear();
 
-        ArgumentDisplayPooler.DeactivateAll();
-
-        titleText.text = customOperation.Name;
-        descriptionText.text = customOperation.Description;
-        instructionText.text = customOperation.Instructions;
-
-        foreach (string argumentLabel in customOperation.ArgumentLabels)
+        if (titleText != null)
         {
-            GameObject argumentDisplayObject = 
-                ArgumentDisplayPooler.GetObject();
-            ArgumentDisplay argDisplay =
-                argumentDisplayObject.GetComponent<ArgumentDisplay>();
-
-            argDisplay.SetArgumentLabelText(argumentLabel);
-            argDisplay.SetArgumentValueText("0");
-            argDisplay.Deactivate();
-            argumentDisplays.Add(argDisplay);
-
-            argumentDisplayObject.SetActive(true);
+            titleText.text = customOperation.Name;
         }
 
-        customOperationInputProcessor.CustomOperation = customOperation;
-        customOperationInputProcessor.ArgumentDisplays = argumentDisplays;
+        if (descriptionText != null)
+        {
+            descriptionText.text = customOperation.Description;
+        }
+
+        if (instructionText != null)
+        {
+            instructionText.text = customOperation.Instructions;
+        }
+
+        if (argumentDisplayPooler != null)
+        {
+            argumentDisplayPooler.DeactivateAll();
+
+            foreach (string argumentLabel in customOperation.ArgumentLabels)
+            {
+                GameObject argumentDisplayObject =
+                    argumentDisplayPooler.GetObject();
+                ArgumentDisplay argDisplay =
+                    argumentDisplayObject.GetComponent<ArgumentDisplay>();
+
+                argDisplay.SetArgumentLabelText(argumentLabel);
+                argDisplay.SetArgumentValueText("0");
+                argDisplay.Deactivate();
+                argumentDisplays.Add(argDisplay);
+
+                argumentDisplayObject.SetActive(true);
+            }
+        }
+
+        if (customOperationInputProcessor != null)
+        {
+            customOperationInputProcessor.CustomOperation = customOperation;
+            customOperationInputProcessor.ArgumentDisplays = argumentDisplays;
+        }
     }
 }

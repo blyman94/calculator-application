@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
@@ -14,17 +12,21 @@ public class CustomOperationLoader : MonoBehaviour
     [Tooltip("Object pooler for OperationSelectionButtons.")]
     [SerializeField] private ObjectPooler selectionButtonPooler;
 
+    [Header("GUI Elements")]
     /// <summary>
     /// Transform whose children will represent custom operation options.
     /// </summary>
-    [Tooltip("Transform whose children will represent custom operation " + 
+    [Tooltip("Transform whose children will represent custom operation " +
         "options.")]
-    [SerializeField] private RectTransform contentTransform;
+    [SerializeField] private RectTransform selectionButtonContentTransform;
 
     #region MonoBehaviour Methods
     private void Start()
     {
-        selectionButtonPooler.InitializePool(contentTransform);
+        if (selectionButtonContentTransform != null)
+        {
+            selectionButtonPooler.InitializePool(selectionButtonContentTransform);
+        }
         LoadCustomOperations();
     }
     #endregion
@@ -36,19 +38,23 @@ public class CustomOperationLoader : MonoBehaviour
     private void LoadCustomOperations()
     {
         Object[] customOperationObjects =
-                    Resources.LoadAll("CustomOperations", typeof(ScriptableObject));
+                    Resources.LoadAll("CustomOperations",
+                    typeof(ScriptableObject));
 
-        selectionButtonPooler.DeactivateAll();
-
-        foreach (Object operation in customOperationObjects)
+        if (selectionButtonPooler != null)
         {
-            ICustomOperation customOp = operation as ICustomOperation;
-            GameObject buttonObject = selectionButtonPooler.GetObject();
-            OperationSelectionButton opSelButton =
-                buttonObject.GetComponent<OperationSelectionButton>();
-            opSelButton.CustomOperation = customOp;
-            
-            buttonObject.SetActive(true);
+            selectionButtonPooler.DeactivateAll();
+
+            foreach (Object operation in customOperationObjects)
+            {
+                ICustomOperation customOp = operation as ICustomOperation;
+                GameObject buttonObject = selectionButtonPooler.GetObject();
+                OperationSelectionButton opSelButton =
+                    buttonObject.GetComponent<OperationSelectionButton>();
+                opSelButton.CustomOperation = customOp;
+
+                buttonObject.SetActive(true);
+            }
         }
     }
 }

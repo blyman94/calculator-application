@@ -51,6 +51,21 @@ public class CalculatorGuiUpdater : MonoBehaviour
     #region MonoBehaviour Methods
     private void OnEnable()
     {
+        SubscribeToDelegates();
+    }
+
+    private void OnDisable()
+    {
+        UnsubscribeFromDelegates();
+    }
+    #endregion
+
+    /// <summary>
+    /// TODO: Subscribes to all delegates of interest from the InputProcessor and 
+    /// CustomOperationInputProcessor classes.
+    /// </summary>
+    private void SubscribeToDelegates()
+    {
         if (inputProcessor != null)
         {
             inputProcessor.UpdateClear += UpdateClearText;
@@ -61,12 +76,17 @@ public class CalculatorGuiUpdater : MonoBehaviour
         if (customOperationInputProcessor != null)
         {
             customOperationInputProcessor.UpdateClear += UpdateClearText;
-            customOperationInputProcessor.UpdateCurrentOperand += 
+            customOperationInputProcessor.UpdateCurrentOperand +=
                 UpdateCurrentOperandText;
             customOperationInputProcessor.UpdateError += UpdateErrorText;
         }
     }
-    private void OnDisable()
+
+    /// <summary>
+    /// TODO: Unsubscribes from all delegates of interest from the InputProcessor 
+    /// and CustomOperationInputProcessor classes.
+    /// </summary>
+    private void UnsubscribeFromDelegates()
     {
         if (inputProcessor != null)
         {
@@ -83,7 +103,6 @@ public class CalculatorGuiUpdater : MonoBehaviour
             customOperationInputProcessor.UpdateError -= UpdateErrorText;
         }
     }
-    #endregion
 
     /// <summary>
     /// Updates the text on the GUI's clear button to better describe its 

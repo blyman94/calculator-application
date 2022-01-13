@@ -1,9 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-// TODO: Unit test this class. Perhaps I can pull out a few more operations from
-// InputProcessor first.
-
 /// <summary>
 /// Receives input from the calculator GUI to use in custom operations 
 /// </summary>
@@ -43,6 +40,15 @@ public class CustomOperationInputProcessor : MonoBehaviour
     public int NumArgs { get; set; }
 
     /// <summary>
+    /// Input Processor handling the infix expression evaluation of the
+    /// calculator.
+    /// </summary>
+    [Tooltip("Input Processor handling the infix expression evaluation of " +
+        "the calculator.")]
+    [SerializeField] private InputProcessor inputProcessor;
+
+    [Header("Events")]
+    /// <summary>
     /// Event used to signal the custom operation has been executed.
     /// </summary>
     [Tooltip("Event used to signal the custom operation has been executed.")]
@@ -55,17 +61,15 @@ public class CustomOperationInputProcessor : MonoBehaviour
     [SerializeField] private GameEvent HideCustomOperationDialogEvent;
 
     /// <summary>
-    /// Input Processor handling the infix expression evaluation of the
-    /// calculator.
-    /// </summary>
-    [Tooltip("Input Processor handling the infix expression evaluation of " +
-        "the calculator.")]
-    [SerializeField] private InputProcessor inputProcessor;
-
-    /// <summary>
     /// Array of arguments to be passed to the custom operation.
     /// </summary>
     private string[] argumentArray;
+
+    /// <summary>
+    /// List of argument display objects that will allow the user to enter 
+    /// arguments for the custom operation.
+    /// </summary>
+    private List<ArgumentDisplay> argumentDisplays;
 
     /// <summary>
     /// Custom Operation the processor is currently concerned with.
@@ -76,7 +80,18 @@ public class CustomOperationInputProcessor : MonoBehaviour
     /// List of argument display objects that will allow the user to enter 
     /// arguments for the custom operation.
     /// </summary>
-    private List<ArgumentDisplay> argumentDisplays;
+    public List<ArgumentDisplay> ArgumentDisplays
+    {
+        get
+        {
+            return argumentDisplays;
+        }
+        set
+        {
+            argumentDisplays = value;
+            argumentDisplays[0].Activate();
+        }
+    }
 
     /// <summary>
     /// Custom Operation the processor is currently concerned with.
@@ -95,23 +110,6 @@ public class CustomOperationInputProcessor : MonoBehaviour
             argumentArray = new string[NumArgs];
             CurrentArgumentIndex = 0;
             CurrentOperand = "";
-        }
-    }
-
-    /// <summary>
-    /// List of argument display objects that will allow the user to enter 
-    /// arguments for the custom operation.
-    /// </summary>
-    public List<ArgumentDisplay> ArgumentDisplays
-    {
-        get
-        {
-            return argumentDisplays;
-        }
-        set
-        {
-            argumentDisplays = value;
-            argumentDisplays[0].Activate();
         }
     }
 
@@ -196,6 +194,7 @@ public class CustomOperationInputProcessor : MonoBehaviour
         {
             CurrentOperand =
                 CurrentOperand.Substring(0, CurrentOperand.Length - 1);
+
             if (CurrentOperand == "")
             {
                 if (ArgumentDisplays != null)
@@ -278,10 +277,12 @@ public class CustomOperationInputProcessor : MonoBehaviour
 
             CurrentArgumentIndex++;
             CurrentOperand = "";
+
             if (argumentDisplays != null)
             {
                 argumentDisplays[CurrentArgumentIndex].Activate();
             }
+            
             UpdateClear?.Invoke(CurrentOperand);
         }
         else

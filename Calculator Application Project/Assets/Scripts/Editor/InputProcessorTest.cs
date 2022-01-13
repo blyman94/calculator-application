@@ -2,9 +2,26 @@ using System.Collections.Generic;
 using NUnit.Framework;
 using UnityEngine;
 
+/// <summary>
+/// TODO: Collection of unit tests for the InputProcessor class.
+/// </summary>
 public class InputProcessorTests
 {
     #region AddOperator Tests
+    [Test]
+    public void AddOperator_EmptyCurrentOperand_OperatorAdded()
+    {
+        GameObject go = new GameObject();
+        InputProcessor inputProcessor = go.AddComponent<InputProcessor>();
+
+        inputProcessor.Initialize();
+
+        inputProcessor.AddOperator("+");
+
+        Assert.AreEqual("+",
+            string.Join(" ", inputProcessor.CurrentExpression));
+    }
+    
     [Test]
     public void AddOperator_NonEmptyCurrentOperand_OperandAndOperatorAdded()
     {
@@ -17,20 +34,6 @@ public class InputProcessorTests
         inputProcessor.AddOperator("+");
 
         Assert.AreEqual("5 +",
-            string.Join(" ", inputProcessor.CurrentExpression));
-    }
-
-    [Test]
-    public void AddOperator_EmptyCurrentOperand_OperatorAdded()
-    {
-        GameObject go = new GameObject();
-        InputProcessor inputProcessor = go.AddComponent<InputProcessor>();
-
-        inputProcessor.Initialize();
-
-        inputProcessor.AddOperator("+");
-
-        Assert.AreEqual("+",
             string.Join(" ", inputProcessor.CurrentExpression));
     }
     #endregion
@@ -128,7 +131,8 @@ public class InputProcessorTests
         InputProcessor inputProcessor = go.AddComponent<InputProcessor>();
 
         inputProcessor.Initialize();
-        inputProcessor.CurrentExpression = new List<string> { "(", "(", "5", "+", "1", ")", ")" };
+        inputProcessor.CurrentExpression = new List<string> { "(", "(", "5", 
+            "+", "1", ")", ")" };
         inputProcessor.AddParen();
 
         Assert.AreEqual("( ( 5 + 1 ) ) * (",
@@ -142,7 +146,8 @@ public class InputProcessorTests
         InputProcessor inputProcessor = go.AddComponent<InputProcessor>();
 
         inputProcessor.Initialize();
-        inputProcessor.CurrentExpression = new List<string> { "(", "(", "5", "+", "1", ")" };
+        inputProcessor.CurrentExpression = new List<string> { "(", "(", "5", 
+            "+", "1", ")" };
 
         // Since the expression is given instead of construction, artifically
         // add the unmatched left paren count.
@@ -319,8 +324,8 @@ public class InputProcessorTests
             new List<string>(){"6.23", "+", "0.019", "*", "(", "23.41", "^",
                 "2.03", ")"},
             // Handles negative decimal values
-            new List<string>(){"-6.23", "+", "(", "-0.019", ")", "*", "(", "23.41", "^",
-                "-2.03", ")"},
+            new List<string>(){"-6.23", "+", "(", "-0.019", ")", "*", "(",
+                "23.41", "^", "-2.03", ")"},
             // Handles all operators and nested parenthesis
             new List<string>(){"(", "-5", "+", "(", "(", "5", "^", "2", ")",
                 "-", "(", "4", "*", "3", "*", "-7", ")", ")", "^", "(", "1",

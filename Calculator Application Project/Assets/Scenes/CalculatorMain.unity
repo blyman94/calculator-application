@@ -1205,7 +1205,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 200855646}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 11400000, guid: 555d3bc5da10053449aac05b64ca685f, type: 2}
+        m_TargetAssemblyTypeName: ApplicationManager, Assembly-CSharp
+        m_MethodName: Quit
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &200855646
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2180,13 +2192,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a71d7570c8e39ec43a093a8d64b0f6e2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ArgumentDisplayPooler: {fileID: 11400000, guid: 033a4fbe781024c43993894ec133d251, type: 2}
+  argumentDisplayPooler: {fileID: 11400000, guid: 033a4fbe781024c43993894ec133d251, type: 2}
   customOperationInputProcessor: {fileID: 339402434}
-  argumentDisplayPrefab: {fileID: 1377018738311589807, guid: 329ac0ea635b69c4e85a1678bfb547f0, type: 3}
   argumentContentTransform: {fileID: 944582226}
-  titleText: {fileID: 761766037}
   descriptionText: {fileID: 296251061}
   instructionText: {fileID: 958912339}
+  titleText: {fileID: 761766037}
 --- !u!114 &339402428
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9711,7 +9722,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   selectionButtonPooler: {fileID: 11400000, guid: 0b7d8fdf76249d24fa623dc02540eb7d, type: 2}
-  contentTransform: {fileID: 276017115}
+  selectionButtonContentTransform: {fileID: 276017115}
 --- !u!225 &2108550364
 CanvasGroup:
   m_ObjectHideFlags: 0

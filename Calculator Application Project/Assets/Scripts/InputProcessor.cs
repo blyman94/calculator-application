@@ -2,9 +2,6 @@ using System.Linq;
 using System.Collections.Generic;
 using UnityEngine;
 
-// TODO: Rename and better document this class.
-// TODO: This class is enormous, look for meaningful ways to refactor.
-
 /// <summary>
 /// Receives input from the calculator GUI to use in infix expression evaluation.
 /// </summary>

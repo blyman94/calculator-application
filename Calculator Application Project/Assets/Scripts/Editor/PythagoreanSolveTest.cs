@@ -2,6 +2,9 @@ using NUnit.Framework;
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// Collection of unit tests for the PythagoreanSolve class.
+/// </summary>
 public class PythagoreanSolveTest
 {
     [Test]
