@@ -9,10 +9,43 @@ public class InfixExpressionProcessorTests
 {
     #region AddOperator Tests
     [Test]
+    public void AddOperator_CurrentExpressionEndsWithLeftParen_NoChange()
+    {
+        GameObject go = new GameObject();
+        InfixExpressionProcessor infExpProcessor =
+            go.AddComponent<InfixExpressionProcessor>();
+
+        infExpProcessor.Initialize();
+        infExpProcessor.CurrentExpression =
+            new List<string>() { "(" };
+        infExpProcessor.AddOperator("+");
+
+        Assert.AreEqual("(",
+            string.Join(" ", infExpProcessor.CurrentExpression));
+    }
+
+    [Test]
+    public void AddOperator_CurrentExpressionEndsWithOperator_ReplaceOperator()
+    {
+        GameObject go = new GameObject();
+        InfixExpressionProcessor infExpProcessor =
+            go.AddComponent<InfixExpressionProcessor>();
+
+        infExpProcessor.Initialize();
+        infExpProcessor.CurrentExpression =
+            new List<string>() { "1", "+" };
+        infExpProcessor.AddOperator("-");
+
+        Assert.AreEqual("1 -",
+            string.Join(" ", infExpProcessor.CurrentExpression));
+    }
+
+    [Test]
     public void AddOperator_EmptyCurrentOperand_OperatorAdded()
     {
         GameObject go = new GameObject();
-        InfixExpressionProcessor infExpProcessor = go.AddComponent<InfixExpressionProcessor>();
+        InfixExpressionProcessor infExpProcessor = 
+            go.AddComponent<InfixExpressionProcessor>();
 
         infExpProcessor.Initialize();
 
@@ -26,7 +59,8 @@ public class InfixExpressionProcessorTests
     public void AddOperator_NonEmptyCurrentOperand_OperandAndOperatorAdded()
     {
         GameObject go = new GameObject();
-        InfixExpressionProcessor infExpProcessor = go.AddComponent<InfixExpressionProcessor>();
+        InfixExpressionProcessor infExpProcessor = 
+            go.AddComponent<InfixExpressionProcessor>();
 
         infExpProcessor.Initialize();
 
@@ -43,7 +77,8 @@ public class InfixExpressionProcessorTests
     public void AddParen_ExpressionEmptyAndCurrentOperandEmpty_LeftParenAdded()
     {
         GameObject go = new GameObject();
-        InfixExpressionProcessor infExpProcessor = go.AddComponent<InfixExpressionProcessor>();
+        InfixExpressionProcessor infExpProcessor = 
+            go.AddComponent<InfixExpressionProcessor>();
 
         infExpProcessor.Initialize();
         infExpProcessor.AddParen();
@@ -56,7 +91,8 @@ public class InfixExpressionProcessorTests
     public void AddParen_ExpressionEmptyAndCurrentOperandNotEmpty_ExplicitMultiplicationAdded()
     {
         GameObject go = new GameObject();
-        InfixExpressionProcessor infExpProcessor = go.AddComponent<InfixExpressionProcessor>();
+        InfixExpressionProcessor infExpProcessor = 
+            go.AddComponent<InfixExpressionProcessor>();
 
         infExpProcessor.Initialize();
         infExpProcessor.CurrentOperand = "5";
@@ -70,7 +106,8 @@ public class InfixExpressionProcessorTests
     public void AddParen_ExpressionEndsWithLeftParenAndCurrentOperandEmpty_LeftParenAdded()
     {
         GameObject go = new GameObject();
-        InfixExpressionProcessor infExpProcessor = go.AddComponent<InfixExpressionProcessor>();
+        InfixExpressionProcessor infExpProcessor = 
+            go.AddComponent<InfixExpressionProcessor>();
 
         infExpProcessor.Initialize();
         infExpProcessor.CurrentExpression = new List<string> { "(" };
@@ -84,7 +121,8 @@ public class InfixExpressionProcessorTests
     public void AddParen_ExpressionEndsWithLeftParenAndCurrentOperandNotEmpty_OperandAndRightParenAdded()
     {
         GameObject go = new GameObject();
-        InfixExpressionProcessor infExpProcessor = go.AddComponent<InfixExpressionProcessor>();
+        InfixExpressionProcessor infExpProcessor = 
+            go.AddComponent<InfixExpressionProcessor>();
 
         infExpProcessor.Initialize();
         infExpProcessor.CurrentOperand = "5";
@@ -99,7 +137,8 @@ public class InfixExpressionProcessorTests
     public void AddParen_ExpressionEndsWithOperatorAndCurrentOperandEmpty_LeftParenAdded()
     {
         GameObject go = new GameObject();
-        InfixExpressionProcessor infExpProcessor = go.AddComponent<InfixExpressionProcessor>();
+        InfixExpressionProcessor infExpProcessor = 
+            go.AddComponent<InfixExpressionProcessor>();
 
         infExpProcessor.Initialize();
         infExpProcessor.CurrentExpression = new List<string> { "5", "+" };
@@ -110,17 +149,18 @@ public class InfixExpressionProcessorTests
     }
 
     [Test]
-    public void AddParen_ExpressionEndsWithOperatorAndCurrentOperandNotEmpty_ExplicitMultiplicationAdded()
+    public void AddParen_ExpressionEndsWithOperatorAndCurrentOperandNotEmpty_RightParenAdded()
     {
         GameObject go = new GameObject();
-        InfixExpressionProcessor infExpProcessor = go.AddComponent<InfixExpressionProcessor>();
+        InfixExpressionProcessor infExpProcessor = 
+            go.AddComponent<InfixExpressionProcessor>();
 
         infExpProcessor.Initialize();
         infExpProcessor.CurrentOperand = "5";
         infExpProcessor.CurrentExpression = new List<string> { "(", "1", "+" };
         infExpProcessor.AddParen();
 
-        Assert.AreEqual("( 1 + 5 * (",
+        Assert.AreEqual("( 1 + 5 )",
             string.Join(" ", infExpProcessor.CurrentExpression));
     }
 
@@ -128,7 +168,8 @@ public class InfixExpressionProcessorTests
     public void AddParen_ExpressionEndsWithRightParenAndCurrentOperandEmptyAndMatchedParens_ExplicitMultiplicationAdded()
     {
         GameObject go = new GameObject();
-        InfixExpressionProcessor infExpProcessor = go.AddComponent<InfixExpressionProcessor>();
+        InfixExpressionProcessor infExpProcessor = 
+            go.AddComponent<InfixExpressionProcessor>();
 
         infExpProcessor.Initialize();
         infExpProcessor.CurrentExpression = new List<string> { "(", "(", "5", 
@@ -143,7 +184,8 @@ public class InfixExpressionProcessorTests
     public void AddParen_ExpressionEndsWithRightParenAndCurrentOperandEmptyAndUnmatchedParens_RightParenAdded()
     {
         GameObject go = new GameObject();
-        InfixExpressionProcessor infExpProcessor = go.AddComponent<InfixExpressionProcessor>();
+        InfixExpressionProcessor infExpProcessor = 
+            go.AddComponent<InfixExpressionProcessor>();
 
         infExpProcessor.Initialize();
         infExpProcessor.CurrentExpression = new List<string> { "(", "(", "5", 
@@ -158,6 +200,22 @@ public class InfixExpressionProcessorTests
         Assert.AreEqual("( ( 5 + 1 ) )",
             string.Join(" ", infExpProcessor.CurrentExpression));
     }
+
+    [Test]
+    public void AddParen_ExpressionEndsWithRightParenAndCurrentOperandNotEmpty_ExplicitMultiplicationAdded()
+    {
+        GameObject go = new GameObject();
+        InfixExpressionProcessor infExpProcessor =
+            go.AddComponent<InfixExpressionProcessor>();
+
+        infExpProcessor.Initialize();
+        infExpProcessor.CurrentOperand = "2";
+        infExpProcessor.CurrentExpression = new List<string> { "(", "1", "+", "5", ")" };
+        infExpProcessor.AddParen();
+
+        Assert.AreEqual("( 1 + 5 ) * 2 * (",
+            string.Join(" ", infExpProcessor.CurrentExpression));
+    }
     #endregion
 
     #region AddToCurrentInput Tests
@@ -165,7 +223,8 @@ public class InfixExpressionProcessorTests
     public void AddToCurrentInput_InputIsDecimalAndCurrentOperandEmpty_AddsZeroPlusDecimal()
     {
         GameObject go = new GameObject();
-        InfixExpressionProcessor infExpProcessor = go.AddComponent<InfixExpressionProcessor>();
+        InfixExpressionProcessor infExpProcessor = 
+            go.AddComponent<InfixExpressionProcessor>();
         infExpProcessor.Initialize();
         infExpProcessor.AddToCurrentInput(".");
         Assert.AreEqual("0.", infExpProcessor.CurrentOperand);
@@ -175,7 +234,8 @@ public class InfixExpressionProcessorTests
     public void AddToCurrentInput_InputIsDecimalAndCurrentOperandNotEmptyAndCurrentOperandDecimal_DoesNotAddDecimal()
     {
         GameObject go = new GameObject();
-        InfixExpressionProcessor infExpProcessor = go.AddComponent<InfixExpressionProcessor>();
+        InfixExpressionProcessor infExpProcessor = 
+            go.AddComponent<InfixExpressionProcessor>();
         infExpProcessor.Initialize();
         infExpProcessor.CurrentOperand = "5.";
         infExpProcessor.AddToCurrentInput(".");
@@ -186,7 +246,8 @@ public class InfixExpressionProcessorTests
     public void AddToCurrentInput_InputIsDecimalAndCurrentOperandNotEmptyAndCurrentOperandNoDecimal_AddsDecimal()
     {
         GameObject go = new GameObject();
-        InfixExpressionProcessor infExpProcessor = go.AddComponent<InfixExpressionProcessor>();
+        InfixExpressionProcessor infExpProcessor = 
+            go.AddComponent<InfixExpressionProcessor>();
         infExpProcessor.Initialize();
         infExpProcessor.CurrentOperand = "5";
         infExpProcessor.AddToCurrentInput(".");
@@ -197,7 +258,8 @@ public class InfixExpressionProcessorTests
     public void AddToCurrentInput_InputIsIntegerAndCurrentOperandNotEmptyAndCurrentOperandNotZero_AddInput()
     {
         GameObject go = new GameObject();
-        InfixExpressionProcessor infExpProcessor = go.AddComponent<InfixExpressionProcessor>();
+        InfixExpressionProcessor infExpProcessor = 
+            go.AddComponent<InfixExpressionProcessor>();
         infExpProcessor.Initialize();
         infExpProcessor.CurrentOperand = "0";
         infExpProcessor.AddToCurrentInput("5");
@@ -208,7 +270,8 @@ public class InfixExpressionProcessorTests
     public void AddToCurrentInput_InputIsIntegerAndCurrentOperandNotEmptyAndCurrentOperandZero_ChangeToInput()
     {
         GameObject go = new GameObject();
-        InfixExpressionProcessor infExpProcessor = go.AddComponent<InfixExpressionProcessor>();
+        InfixExpressionProcessor infExpProcessor = 
+            go.AddComponent<InfixExpressionProcessor>();
         infExpProcessor.Initialize();
         infExpProcessor.CurrentOperand = "0";
         infExpProcessor.AddToCurrentInput("5");
@@ -219,7 +282,8 @@ public class InfixExpressionProcessorTests
     public void AddToCurrentInput_InputIsIntegerAndCurrentOperandNotEmptyAndCurrentOperandIsResult_ChangeToInput()
     {
         GameObject go = new GameObject();
-        InfixExpressionProcessor infExpProcessor = go.AddComponent<InfixExpressionProcessor>();
+        InfixExpressionProcessor infExpProcessor = 
+            go.AddComponent<InfixExpressionProcessor>();
         infExpProcessor.Initialize();
         infExpProcessor.IsResult = true;
         infExpProcessor.CurrentOperand = "1";
@@ -231,7 +295,8 @@ public class InfixExpressionProcessorTests
     public void AddToCurrentInput_InputIsZeroAndCurrentOperandEmpty_CurrentOperandIsZero()
     {
         GameObject go = new GameObject();
-        InfixExpressionProcessor infExpProcessor = go.AddComponent<InfixExpressionProcessor>();
+        InfixExpressionProcessor infExpProcessor = 
+            go.AddComponent<InfixExpressionProcessor>();
         infExpProcessor.Initialize();
         infExpProcessor.AddToCurrentInput("0");
         Assert.AreEqual("0", infExpProcessor.CurrentOperand);
@@ -241,7 +306,8 @@ public class InfixExpressionProcessorTests
     public void AddToCurrentInput_InputIsZeroAndCurrentOperandNotEmptyAndCurrentOperandNotZero_AddsZero()
     {
         GameObject go = new GameObject();
-        InfixExpressionProcessor infExpProcessor = go.AddComponent<InfixExpressionProcessor>();
+        InfixExpressionProcessor infExpProcessor = 
+            go.AddComponent<InfixExpressionProcessor>();
         infExpProcessor.Initialize();
         infExpProcessor.CurrentOperand = "5";
         infExpProcessor.AddToCurrentInput("0");
@@ -252,7 +318,8 @@ public class InfixExpressionProcessorTests
     public void AddToCurrentInput_InputIsZeroAndCurrentOperandNotEmptyAndCurrentOperandZero_DoesNotAddZero()
     {
         GameObject go = new GameObject();
-        InfixExpressionProcessor infExpProcessor = go.AddComponent<InfixExpressionProcessor>();
+        InfixExpressionProcessor infExpProcessor = 
+            go.AddComponent<InfixExpressionProcessor>();
         infExpProcessor.Initialize();
         infExpProcessor.CurrentOperand = "0";
         infExpProcessor.AddToCurrentInput("0");
@@ -265,7 +332,8 @@ public class InfixExpressionProcessorTests
     public void Backspace_CurrentOperandNotEmpty_RemovesLastToken()
     {
         GameObject go = new GameObject();
-        InfixExpressionProcessor infExpProcessor = go.AddComponent<InfixExpressionProcessor>();
+        InfixExpressionProcessor infExpProcessor = 
+            go.AddComponent<InfixExpressionProcessor>();
         infExpProcessor.Initialize();
         infExpProcessor.CurrentOperand = "506";
         infExpProcessor.Backspace();
@@ -278,7 +346,8 @@ public class InfixExpressionProcessorTests
     public void ClearInput_CurrentOperandEmptyAndClearedOnce_ClearsExpression()
     {
         GameObject go = new GameObject();
-        InfixExpressionProcessor infExpProcessor = go.AddComponent<InfixExpressionProcessor>();
+        InfixExpressionProcessor infExpProcessor = 
+            go.AddComponent<InfixExpressionProcessor>();
         infExpProcessor.Initialize();
         infExpProcessor.CurrentExpression = new List<string>() { "1", "+", "2" };
         infExpProcessor.CurrentOperand = "";
@@ -291,7 +360,8 @@ public class InfixExpressionProcessorTests
     public void ClearInput_CurrentOperandEmptyAndNotClearedOnce_ClearsOperand()
     {
         GameObject go = new GameObject();
-        InfixExpressionProcessor infExpProcessor = go.AddComponent<InfixExpressionProcessor>();
+        InfixExpressionProcessor infExpProcessor = 
+            go.AddComponent<InfixExpressionProcessor>();
         infExpProcessor.Initialize();
         infExpProcessor.CurrentOperand = "";
         infExpProcessor.ClearedOnce = false;
@@ -303,7 +373,8 @@ public class InfixExpressionProcessorTests
     public void ClearInput_CurrentOperandNotEmpty_ClearsOperand()
     {
         GameObject go = new GameObject();
-        InfixExpressionProcessor infExpProcessor = go.AddComponent<InfixExpressionProcessor>();
+        InfixExpressionProcessor infExpProcessor = 
+            go.AddComponent<InfixExpressionProcessor>();
         infExpProcessor.Initialize();
         infExpProcessor.CurrentOperand = "500";
         infExpProcessor.ClearInput();
@@ -316,7 +387,8 @@ public class InfixExpressionProcessorTests
     public void Execute_ComplexExpressions_ResultIsCorrect()
     {
         GameObject go = new GameObject();
-        InfixExpressionProcessor infExpProcessor = go.AddComponent<InfixExpressionProcessor>();
+        InfixExpressionProcessor infExpProcessor = 
+            go.AddComponent<InfixExpressionProcessor>();
 
         List<List<string>> infixExpressions = new List<List<string>>()
         {
@@ -353,7 +425,8 @@ public class InfixExpressionProcessorTests
     public void ToggleNegative_CurrentOperandNotEmptyAndCurrentOperandNegative_OperandPositive()
     {
         GameObject go = new GameObject();
-        InfixExpressionProcessor infExpProcessor = go.AddComponent<InfixExpressionProcessor>();
+        InfixExpressionProcessor infExpProcessor = 
+            go.AddComponent<InfixExpressionProcessor>();
         infExpProcessor.Initialize();
         infExpProcessor.CurrentOperand = "-5";
         infExpProcessor.ToggleNegative();
@@ -364,7 +437,8 @@ public class InfixExpressionProcessorTests
     public void ToggleNegative_CurrentOperandNotEmptyAndCurrentOperandNotNegative_NegatesOperand()
     {
         GameObject go = new GameObject();
-        InfixExpressionProcessor infExpProcessor = go.AddComponent<InfixExpressionProcessor>();
+        InfixExpressionProcessor infExpProcessor = 
+            go.AddComponent<InfixExpressionProcessor>();
         infExpProcessor.Initialize();
         infExpProcessor.CurrentOperand = "5";
         infExpProcessor.ToggleNegative();

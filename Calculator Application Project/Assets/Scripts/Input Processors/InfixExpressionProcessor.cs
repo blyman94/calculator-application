@@ -33,6 +33,12 @@ public class InfixExpressionProcessor : MonoBehaviour, IInputProcessor
     /// </summary>
     private Calculator calculator;
 
+    /// <summary>
+    /// String containing all operands the InfixExpressionProcessor will
+    /// consider as operators.
+    /// </summary>
+    private string operators = "^*/+-";
+
     #region MonoBehaviour Methods
     private void Start()
     {
@@ -65,6 +71,18 @@ public class InfixExpressionProcessor : MonoBehaviour, IInputProcessor
         {
             CurrentExpression.Add(CurrentOperand);
         }
+        if (!CurrentExpression.IsEmpty())
+        {
+            if (CurrentExpression.Last() == "(")
+            {
+                return;
+            }
+
+            if (operators.Contains(CurrentExpression.Last()))
+            {
+                CurrentExpression.RemoveAt(CurrentExpression.Count - 1);
+            }
+        }
         CurrentExpression.Add(operatorString);
 
         UpdateCurrentExpression?.Invoke(string.Join(" ", CurrentExpression));
@@ -85,7 +103,7 @@ public class InfixExpressionProcessor : MonoBehaviour, IInputProcessor
                 AddOperator("*");
             }
 
-            AddOperator("(");
+            CurrentExpression.Add("(");
             UnmatchedLeftParenCount++;
         }
         else
@@ -94,7 +112,7 @@ public class InfixExpressionProcessor : MonoBehaviour, IInputProcessor
             {
                 if (CurrentExpression.Last() == "(")
                 {
-                    AddOperator("(");
+                    CurrentExpression.Add("(");
                     UnmatchedLeftParenCount++;
                 }
                 else if (CurrentExpression.Last() == ")")
@@ -107,13 +125,13 @@ public class InfixExpressionProcessor : MonoBehaviour, IInputProcessor
                     else
                     {
                         AddOperator("*");
-                        AddOperator("(");
+                        CurrentExpression.Add("(");
                         UnmatchedLeftParenCount++;
                     }
                 }
-                else if (calculator.Operators.Contains(CurrentExpression.Last()))
+                else if (operators.Contains(CurrentExpression.Last()))
                 {
-                    AddOperator("(");
+                    CurrentExpression.Add("(");
                     UnmatchedLeftParenCount++;
                 }
             }
@@ -124,10 +142,17 @@ public class InfixExpressionProcessor : MonoBehaviour, IInputProcessor
                     AddOperator(")");
                     UnmatchedLeftParenCount--;
                 }
-                else if (calculator.Operators.Contains(CurrentExpression.Last()))
+                else if (operators.Contains(CurrentExpression.Last()))
                 {
+                    AddOperator(")");
+                    UnmatchedLeftParenCount--;
+                }
+                else
+                {
+                    // Expression must end with ")"
+                    CurrentExpression.Add("*");
                     AddOperator("*");
-                    AddOperator("(");
+                    CurrentExpression.Add("(");
                     UnmatchedLeftParenCount++;
                 }
             }
@@ -260,16 +285,46 @@ public class InfixExpressionProcessor : MonoBehaviour, IInputProcessor
                 CurrentExpression.Add(CurrentOperand);
             }
 
-            string result =
+            string result = 
                 calculator.AcceptInputArray(CurrentExpression.ToArray());
 
             UpdateCurrentExpression?.Invoke(string.Join(" ",
                 CurrentExpression) + "=");
             CurrentExpression.Clear();
 
+            if (result == "Infinity")
+            {
+                CurrentOperand = "";
+                IsResult = false;
+                UpdateCurrentOperand?.Invoke("0");
+                UpdateError?.Invoke("Infinity Error: The expression " +
+                    "evaluates to Infinity (and beyond!).");
+                return;
+            }
+
+            if (result == "NaN")
+            {
+                CurrentOperand = "";
+                IsResult = false;
+                UpdateCurrentOperand?.Invoke("0");
+                UpdateError?.Invoke("Not a Number Error: The expression " +
+                    "evaluates to NaN (and not the delicious, doughy kind!).");
+                return;
+            }
+
+            if (result.Contains("E"))
+            {
+                CurrentOperand = "";
+                IsResult = false;
+                UpdateCurrentOperand?.Invoke("0");
+                UpdateError?.Invoke("Scientific Notation Error: The " + 
+                    "expression evaluates to a number in scientific " + 
+                    "notation, which this calculator does not support :(");
+                return;
+            }
+
             CurrentOperand = result;
             IsResult = true;
-
             UpdateCurrentOperand?.Invoke(CurrentOperand);
             UpdateError?.Invoke("");
         }
