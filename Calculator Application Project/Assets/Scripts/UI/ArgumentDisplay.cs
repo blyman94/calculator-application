@@ -40,7 +40,10 @@ public class ArgumentDisplay : MonoBehaviour
     #region MonoBehaviour Methods
     private void Awake()
     {
-        activeStateImage.color = inactiveColor;
+        if (activeStateImage != null)
+        {
+            activeStateImage.color = inactiveColor;
+        }
     }
     #endregion
 
@@ -50,7 +53,10 @@ public class ArgumentDisplay : MonoBehaviour
     /// </summary>
     public void Activate()
     {
-        activeStateImage.color = activeColor;
+        if (activeStateImage != null)
+        {
+            activeStateImage.color = activeColor;
+        }
     }
 
     /// <summary>
@@ -59,9 +65,12 @@ public class ArgumentDisplay : MonoBehaviour
     /// </summary>
     public void Deactivate()
     {
-        activeStateImage.color = inactiveColor;
+        if (activeStateImage != null)
+        {
+            activeStateImage.color = inactiveColor;
+        }
     }
-    
+
     /// <summary>
     /// Sets the arugment's label text to the passed string.
     /// </summary>
@@ -69,7 +78,10 @@ public class ArgumentDisplay : MonoBehaviour
     /// to.</param>
     public void SetArgumentLabelText(string newText)
     {
-        argumentLabelText.text = newText;
+        if (argumentLabelText != null)
+        {
+            argumentLabelText.text = newText;
+        }
     }
 
     /// <summary>
@@ -79,7 +91,14 @@ public class ArgumentDisplay : MonoBehaviour
     /// text.</returns>
     public string GetArgumentValueText()
     {
-        return argumentValueText.text;
+        if (argumentValueText != null)
+        {
+            return argumentValueText.text;
+        }
+        else
+        {
+            return "";
+        }
     }
 
     /// <summary>
@@ -89,6 +108,9 @@ public class ArgumentDisplay : MonoBehaviour
     /// to.</param>
     public void SetArgumentValueText(string newText)
     {
-        argumentValueText.text = newText;
+        if (argumentValueText != null)
+        {
+            argumentValueText.text = newText;
+        }
     }
 }

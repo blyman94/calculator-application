@@ -109,17 +109,16 @@ public class PythagoreanSolve : ScriptableObject, ICustomOperation
         {
             // The lengths of the hypotenuse (c) and a leg (b) are given,
             // solve for the other leg (a).
+            if (b == 0 || c == 0)
+            {
+                throw new InvalidInputException("Invalid Inputs: Too few " +
+                    "inputs given for Pythagorean Solve operation.");
+            }
 
             if (b > c)
             {
                 throw new InvalidTriangleException("Invalid Triangle: Length " +
                     "of leg b is greater than length of the hypotenuse.");
-            }
-
-            if (b == 0 || c == 0)
-            {
-                throw new InvalidInputException("Invalid Inputs: Too few " +
-                    "inputs given for Pythagorean Solve operation.");
             }
 
             float bSqr = Mathf.Pow(b, 2);
@@ -133,16 +132,16 @@ public class PythagoreanSolve : ScriptableObject, ICustomOperation
             // The lengths of the hypotenuse (c) and a leg (a) are given,
             // solve for the other leg (b).
 
-            if (a > c)
-            {
-                throw new InvalidTriangleException("Length of leg a is " +
-                    "greater than length of hypotenuse.");
-            }
-
             if (a == 0 || c == 0)
             {
                 throw new InvalidInputException("Invalid Inputs: Too few " +
                     "inputs given for Pythagorean Solve operation.");
+            }
+
+            if (a > c)
+            {
+                throw new InvalidTriangleException("Length of leg a is " +
+                    "greater than length of hypotenuse.");
             }
 
             float aSqr = Mathf.Pow(a, 2);

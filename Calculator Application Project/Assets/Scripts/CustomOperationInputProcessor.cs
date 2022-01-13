@@ -27,6 +27,22 @@ public class CustomOperationInputProcessor : MonoBehaviour
     #endregion
 
     /// <summary>
+    /// The index of the argument of the custom operation that is currently
+    /// accepting input.
+    /// </summary>
+    public int CurrentArgumentIndex { get; set; }
+
+    /// <summary>
+    /// Operand the user is currently entering.
+    /// </summary>
+    public string CurrentOperand { get; set; }
+
+    /// <summary>
+    /// Number of arguments in the custom operation.
+    /// </summary>
+    public int NumArgs { get; set; }
+
+    /// <summary>
     /// Event used to signal the custom operation has been executed.
     /// </summary>
     [Tooltip("Event used to signal the custom operation has been executed.")]
@@ -52,25 +68,9 @@ public class CustomOperationInputProcessor : MonoBehaviour
     private string[] argumentArray;
 
     /// <summary>
-    /// The index of the argument of the custom operation that is currently
-    /// accepting input.
-    /// </summary>
-    private int currentArgumentIndex;
-
-    /// <summary>
-    /// Operand the user is currently entering.
-    /// </summary>
-    private string currentOperand;
-
-    /// <summary>
     /// Custom Operation the processor is currently concerned with.
     /// </summary>
     private ICustomOperation customOperation;
-
-    /// <summary>
-    /// Number of arguments in the custom operation.
-    /// </summary>
-    private int numArgs;
 
     /// <summary>
     /// List of argument display objects that will allow the user to enter 
@@ -91,10 +91,10 @@ public class CustomOperationInputProcessor : MonoBehaviour
         {
             customOperation = value;
 
-            numArgs = customOperation.ArgumentLabels.Length;
-            argumentArray = new string[numArgs];
-            currentArgumentIndex = 0;
-            currentOperand = "";
+            NumArgs = customOperation.ArgumentLabels.Length;
+            argumentArray = new string[NumArgs];
+            CurrentArgumentIndex = 0;
+            CurrentOperand = "";
         }
     }
 
@@ -126,54 +126,58 @@ public class CustomOperationInputProcessor : MonoBehaviour
         {
             if (customOperation.AllowsDecimal)
             {
-                if (currentOperand == "")
+                if (CurrentOperand == "")
                 {
-                    currentOperand = "0.";
+                    CurrentOperand = "0.";
                 }
                 else
                 {
-                    if (!currentOperand.Contains("."))
+                    if (!CurrentOperand.Contains("."))
                     {
-                        currentOperand += input;
+                        CurrentOperand += input;
                     }
                 }
             }
             else
             {
-                if (currentOperand == "")
+                if (CurrentOperand == "")
                 {
-                    currentOperand = "0.";
+                    CurrentOperand = "0";
                 }
             }
         }
         else if (input == "0")
         {
-            if (currentOperand == "")
+            if (CurrentOperand == "")
             {
-                currentOperand = "0";
+                CurrentOperand = "0";
             }
             else
             {
-                if (!(currentOperand == "0"))
+                if (!(CurrentOperand == "0"))
                 {
-                    currentOperand += input;
+                    CurrentOperand += input;
                 }
             }
         }
         else
         {
-            if (currentOperand == "0")
+            if (CurrentOperand == "0")
             {
-                currentOperand = input;
+                CurrentOperand = input;
             }
             else
             {
-                currentOperand += input;
+                CurrentOperand += input;
             }
         }
 
-        UpdateClear?.Invoke(currentOperand);
-        ArgumentDisplays[currentArgumentIndex].SetArgumentValueText(currentOperand);
+        UpdateClear?.Invoke(CurrentOperand);
+
+        if (ArgumentDisplays != null)
+        {
+            ArgumentDisplays[CurrentArgumentIndex].SetArgumentValueText(CurrentOperand);
+        }
     }
 
     /// <summary>
@@ -181,22 +185,31 @@ public class CustomOperationInputProcessor : MonoBehaviour
     /// </summary>
     public void Backspace()
     {
-        if (currentOperand == "")
+        if (CurrentOperand == "")
         {
-            ArgumentDisplays[currentArgumentIndex].SetArgumentValueText("0");
+            if (ArgumentDisplays != null)
+            {
+                ArgumentDisplays[CurrentArgumentIndex].SetArgumentValueText("0");
+            }
         }
         else
         {
-            currentOperand =
-                currentOperand.Substring(0, currentOperand.Length - 1);
-            if (currentOperand == "")
+            CurrentOperand =
+                CurrentOperand.Substring(0, CurrentOperand.Length - 1);
+            if (CurrentOperand == "")
             {
-                ArgumentDisplays[currentArgumentIndex].SetArgumentValueText("0");
-                UpdateClear?.Invoke(currentOperand);
+                if (ArgumentDisplays != null)
+                {
+                    ArgumentDisplays[CurrentArgumentIndex].SetArgumentValueText("0");
+                }
+                UpdateClear?.Invoke(CurrentOperand);
             }
             else
             {
-                ArgumentDisplays[currentArgumentIndex].SetArgumentValueText(currentOperand);
+                if (ArgumentDisplays != null)
+                {
+                    ArgumentDisplays[CurrentArgumentIndex].SetArgumentValueText(CurrentOperand);
+                }
             }
         }
     }
@@ -210,28 +223,38 @@ public class CustomOperationInputProcessor : MonoBehaviour
     /// </summary>
     public void ClearInput()
     {
-        if (currentOperand == "")
+        if (CurrentOperand == "")
         {
-            argumentDisplays[currentArgumentIndex].Deactivate();
-            currentArgumentIndex--;
-            if (currentArgumentIndex < 0)
+            if (argumentDisplays != null)
+            {
+                argumentDisplays[CurrentArgumentIndex].Deactivate();
+            }
+            CurrentArgumentIndex--;
+            if (CurrentArgumentIndex < 0)
             {
                 HideCustomOperationDialogEvent.Raise();
             }
             else
             {
-                argumentDisplays[currentArgumentIndex].Activate();
-                currentOperand =
-                    argumentDisplays[currentArgumentIndex].GetArgumentValueText();
+                if (argumentDisplays != null)
+                {
+                    argumentDisplays[CurrentArgumentIndex].Activate();
+                    CurrentOperand =
+                        argumentDisplays[CurrentArgumentIndex].GetArgumentValueText();
+                }
             }
         }
         else
         {
-            currentOperand = "";
-            ArgumentDisplays[currentArgumentIndex].SetArgumentValueText("0");
+            CurrentOperand = "";
+
+            if (ArgumentDisplays != null)
+            {
+                ArgumentDisplays[CurrentArgumentIndex].SetArgumentValueText("0");
+            }
         }
 
-        UpdateClear?.Invoke(currentOperand);
+        UpdateClear?.Invoke(CurrentOperand);
     }
 
     /// <summary>
@@ -241,22 +264,32 @@ public class CustomOperationInputProcessor : MonoBehaviour
     /// </summary>
     public void Enter()
     {
-        if (currentArgumentIndex < numArgs - 1)
+        if (CurrentArgumentIndex < NumArgs - 1)
         {
-            argumentArray[currentArgumentIndex] = currentOperand;
-            argumentDisplays[currentArgumentIndex].Deactivate();
+            if (argumentArray != null)
+            {
+                argumentArray[CurrentArgumentIndex] = CurrentOperand;
+            }
 
-            currentArgumentIndex++;
-            currentOperand = "";
-            argumentDisplays[currentArgumentIndex].Activate();
-            UpdateClear?.Invoke(currentOperand);
+            if (argumentDisplays != null)
+            {
+                argumentDisplays[CurrentArgumentIndex].Deactivate();
+            }
+
+            CurrentArgumentIndex++;
+            CurrentOperand = "";
+            if (argumentDisplays != null)
+            {
+                argumentDisplays[CurrentArgumentIndex].Activate();
+            }
+            UpdateClear?.Invoke(CurrentOperand);
         }
         else
         {
             try
             {
-                argumentArray[currentArgumentIndex] = currentOperand;
-                currentArgumentIndex = 0;
+                argumentArray[CurrentArgumentIndex] = CurrentOperand;
+                CurrentArgumentIndex = 0;
                 string result = customOperation.Execute(argumentArray);
                 UpdateCurrentOperand?.Invoke(result);
                 inputProcessor.CurrentOperand = result;
@@ -279,19 +312,22 @@ public class CustomOperationInputProcessor : MonoBehaviour
     {
         if (customOperation.AllowsNegative)
         {
-            if (!(currentOperand == ""))
+            if (!(CurrentOperand == ""))
             {
-                if (currentOperand.Substring(0, 1) != "-")
+                if (CurrentOperand.Substring(0, 1) != "-")
                 {
-                    currentOperand = "-" + currentOperand;
+                    CurrentOperand = "-" + CurrentOperand;
                 }
                 else
                 {
-                    currentOperand =
-                        currentOperand.Substring(1, currentOperand.Length - 1);
+                    CurrentOperand =
+                        CurrentOperand.Substring(1, CurrentOperand.Length - 1);
                 }
 
-                ArgumentDisplays[currentArgumentIndex].SetArgumentValueText(currentOperand);
+                if (ArgumentDisplays != null)
+                {
+                    ArgumentDisplays[CurrentArgumentIndex].SetArgumentValueText(CurrentOperand);
+                }
             }
         }
     }
