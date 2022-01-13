@@ -19,3 +19,5 @@ MonoBehaviour:
   - 'Length Leg A:'
   - 'Length Leg B:'
   - 'Length Hyp C:'
+  allowsDecimal: 1
+  allowsNegative: 0

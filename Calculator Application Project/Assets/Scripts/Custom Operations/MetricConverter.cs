@@ -37,12 +37,32 @@ public class MetricConverter : ScriptableObject, ICustomOperation
         "the Metric Converter operation.")]
     [SerializeField] private string[] argumentLabels;
 
+    /// <summary>
+    /// Can this custom operation accept decimal (non-integer) values?
+    /// </summary>
+    [Tooltip("Can this custom operation accept decimal (non-integer) values?")]
+    [SerializeField] private bool allowsDecimal;
+
+    /// <summary>
+    /// Can this custom operation accept negative values?
+    /// </summary>
+    [Tooltip("Can this custom operation accept negative values?")]
+    [SerializeField] private bool allowsNegative;
+
     #region ICustomOperation Methods
-    public string Description
+    public bool AllowsDecimal
     {
         get
         {
-            return description;
+            return allowsDecimal;
+        }
+    }
+    
+    public bool AllowsNegative
+    {
+        get
+        {
+            return allowsNegative;
         }
     }
 
@@ -51,6 +71,14 @@ public class MetricConverter : ScriptableObject, ICustomOperation
         get
         {
             return argumentLabels;
+        }
+    }
+
+    public string Description
+    {
+        get
+        {
+            return description;
         }
     }
 
@@ -72,9 +100,6 @@ public class MetricConverter : ScriptableObject, ICustomOperation
 
     public string Execute(string[] inputs)
     {
-        // InputValidator.ValidateInputCount(inputs, 1);
-        // InputValidator.ValidateInputSign(inputs, false);
-
         float impLength = float.Parse(inputs[0]);
         return (impLength * 2.54f).ToString();
     }

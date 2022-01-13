@@ -1,5 +1,6 @@
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 /// <summary>
 /// Visual representation of an arugment to a custom operation.
@@ -18,6 +19,49 @@ public class ArgumentDisplay : MonoBehaviour
     [Tooltip("Text representing the argument's label.")]
     [SerializeField] private TextMeshProUGUI argumentLabelText;
 
+    /// <summary>
+    /// Image to change color of to signal activation state.
+    /// </summary>
+    [Tooltip("Image to change color of to signal activation state.")]
+    [SerializeField] private Image activeStateImage;
+
+    /// <summary>
+    /// Color to highlight the argument value with when active.
+    /// </summary>
+    [Tooltip("Color to highlight the argument value with when active.")]
+    [SerializeField] private Color activeColor;
+
+    /// <summary>
+    /// Color to highlight the argument value with when inactive.
+    /// </summary>
+    [Tooltip("Color to highlight the argument value with when inactive.")]
+    [SerializeField] private Color inactiveColor;
+
+    #region MonoBehaviour Methods
+    private void Awake()
+    {
+        activeStateImage.color = inactiveColor;
+    }
+    #endregion
+
+    /// <summary>
+    /// Visually identifies this argument display as the active argument the
+    /// user can edit while executing a custom operation.
+    /// </summary>
+    public void Activate()
+    {
+        activeStateImage.color = activeColor;
+    }
+
+    /// <summary>
+    /// Visually identifies this argument display as an inactive argument the
+    /// user is not currently editing while executing a custom operation.
+    /// </summary>
+    public void Deactivate()
+    {
+        activeStateImage.color = inactiveColor;
+    }
+    
     /// <summary>
     /// Sets the arugment's label text to the passed string.
     /// </summary>
@@ -45,6 +89,6 @@ public class ArgumentDisplay : MonoBehaviour
     /// to.</param>
     public void SetArgumentValueText(string newText)
     {
-        argumentLabelText.text = newText;
+        argumentValueText.text = newText;
     }
 }

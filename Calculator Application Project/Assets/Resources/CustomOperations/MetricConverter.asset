@@ -14,6 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   name: Metric Converter
   description: Converts a length in inches to a length in centimeters.
-  instructions: Enter a length in inches.
+  instructions: Enter a positive length in inches.
   argumentLabels:
   - 'Length in Inches:'
+  allowsDecimal: 1
+  allowsNegative: 0

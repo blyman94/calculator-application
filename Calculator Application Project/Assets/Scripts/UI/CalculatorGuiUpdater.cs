@@ -1,11 +1,9 @@
-using System.Collections;
-using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
 /// <summary>
 /// Responsible for updating the calculator GUI in response to changes in the 
-/// input processors.
+/// backend input processors.
 /// </summary>
 public class CalculatorGuiUpdater : MonoBehaviour
 {
@@ -43,6 +41,13 @@ public class CalculatorGuiUpdater : MonoBehaviour
     [Tooltip("Input processor based on which this class will update the GUI.")]
     [SerializeField] private InputProcessor inputProcessor;
 
+    /// <summary>
+    /// Input processor based on which this class will update the GUI.
+    /// </summary>
+    [Tooltip("Input processor based on which this class will update the GUI.")]
+    [SerializeField]
+    private CustomOperationInputProcessor customOperationInputProcessor;
+
     #region MonoBehaviour Methods
     private void OnEnable()
     {
@@ -53,6 +58,13 @@ public class CalculatorGuiUpdater : MonoBehaviour
             inputProcessor.UpdateCurrentOperand += UpdateCurrentOperandText;
             inputProcessor.UpdateError += UpdateErrorText;
         }
+        if (customOperationInputProcessor != null)
+        {
+            customOperationInputProcessor.UpdateClear += UpdateClearText;
+            customOperationInputProcessor.UpdateCurrentOperand += 
+                UpdateCurrentOperandText;
+            customOperationInputProcessor.UpdateError += UpdateErrorText;
+        }
     }
     private void OnDisable()
     {
@@ -62,6 +74,13 @@ public class CalculatorGuiUpdater : MonoBehaviour
             inputProcessor.UpdateCurrentExpression -= UpdateExpressionText;
             inputProcessor.UpdateCurrentOperand -= UpdateCurrentOperandText;
             inputProcessor.UpdateError -= UpdateErrorText;
+        }
+        if (customOperationInputProcessor != null)
+        {
+            customOperationInputProcessor.UpdateClear -= UpdateClearText;
+            customOperationInputProcessor.UpdateCurrentOperand -=
+                UpdateCurrentOperandText;
+            customOperationInputProcessor.UpdateError -= UpdateErrorText;
         }
     }
     #endregion

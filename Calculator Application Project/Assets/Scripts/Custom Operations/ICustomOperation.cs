@@ -5,6 +5,22 @@
 public interface ICustomOperation
 {
     /// <summary>
+    /// Can this custom operation accept decimal values (non-integers)?
+    /// </summary>
+    bool AllowsDecimal { get; }
+    
+    /// <summary>
+    /// Can this custom operation accept negative values?
+    /// </summary>
+    bool AllowsNegative { get; }
+
+    /// <summary>
+    /// Returns an array of strings representing the labels of all inputs to the
+    /// custom operation.
+    /// </summary>
+    string[] ArgumentLabels { get; }
+
+    /// <summary>
     /// Returns the description of this custom operation as a string.
     /// </summary>
     string Description { get; }
@@ -18,12 +34,6 @@ public interface ICustomOperation
     /// <returns>A string value representing the result of the executed 
     /// operation.</returns>
     string Execute(string[] inputs);
-
-    /// <summary>
-    /// Returns an array of strings representing the labels of all inputs to the
-    /// custom operation.
-    /// </summary>
-    string[] ArgumentLabels { get; }
 
     /// <summary>
     /// Returns the instructions for this custom operation as a string.

@@ -5,28 +5,28 @@ using UnityEngine;
 /// right triangle and calculating the length of the missing side (represented 
 /// by a 0) of that triangle. 
 /// </summary>
-[CreateAssetMenu(menuName = "Custom Operation.../Pythagorean Solve", 
+[CreateAssetMenu(menuName = "Custom Operation.../Pythagorean Solve",
     fileName = "PythagoreanSolve")]
 public class PythagoreanSolve : ScriptableObject, ICustomOperation
 {
     /// <summary>
     /// A string with the name of the Pythagorean Solve operation.
     /// </summary>
-    [Tooltip("A string containing instructions for the Pythagorean Solve " + 
+    [Tooltip("A string containing instructions for the Pythagorean Solve " +
         "operation.")]
     [SerializeField] new private string name;
 
     /// <summary>
     /// A string containing a description of the Pythagorean Solve operation.
     /// </summary>
-    [Tooltip("A string containing a description of the Pythagorean Solve " + 
+    [Tooltip("A string containing a description of the Pythagorean Solve " +
         "operation.")]
     [SerializeField] private string description;
 
     /// <summary>
     /// A string containing instructions for the Pythagorean Solve operation.
     /// </summary>
-    [Tooltip("A string containing instructions for the Pythagorean Solve " + 
+    [Tooltip("A string containing instructions for the Pythagorean Solve " +
         "operation.")]
     [SerializeField] private string instructions;
 
@@ -34,16 +34,36 @@ public class PythagoreanSolve : ScriptableObject, ICustomOperation
     /// An array of strings representing the labels for each input to the 
     /// Pythagorean Solve operation.
     /// </summary>
-    [Tooltip("An array of strings representing the labels for each input to " + 
+    [Tooltip("An array of strings representing the labels for each input to " +
         "the Pythagorean Solve operation.")]
     [SerializeField] private string[] argumentLabels;
 
+    /// <summary>
+    /// Can this custom operation accept decimal (non-integer) values?
+    /// </summary>
+    [Tooltip("Can this custom operation accept decimal (non-integer) values?")]
+    [SerializeField] private bool allowsDecimal;
+
+    /// <summary>
+    /// Can this custom operation accept negative values?
+    /// </summary>
+    [Tooltip("Can this custom operation accept negative values?")]
+    [SerializeField] private bool allowsNegative;
+
     #region ICustomOperation Methods
-    public string Description
+    public bool AllowsDecimal
     {
         get
         {
-            return description;
+            return allowsDecimal;
+        }
+    }
+
+    public bool AllowsNegative
+    {
+        get
+        {
+            return allowsNegative;
         }
     }
 
@@ -52,6 +72,14 @@ public class PythagoreanSolve : ScriptableObject, ICustomOperation
         get
         {
             return argumentLabels;
+        }
+    }
+
+    public string Description
+    {
+        get
+        {
+            return description;
         }
     }
 
@@ -73,13 +101,9 @@ public class PythagoreanSolve : ScriptableObject, ICustomOperation
 
     public string Execute(string[] inputs)
     {
-        // InputValidator.ValidateInputCount(inputs, 3);
-        // InputValidator.ValidateNonZeroInputCount(inputs, 2);
-        // InputValidator.ValidateInputSign(inputs, true);
-
-        float a = float.Parse(inputs[0]);
-        float b = float.Parse(inputs[1]);
-        float c = float.Parse(inputs[2]);
+        float.TryParse(inputs[0], out float a);
+        float.TryParse(inputs[1], out float b);
+        float.TryParse(inputs[2], out float c);
 
         if (a == 0)
         {
@@ -88,8 +112,14 @@ public class PythagoreanSolve : ScriptableObject, ICustomOperation
 
             if (b > c)
             {
-                throw new InvalidTriangleException("Length of leg b is " +
-                    "greater than length of hypotenuse.");
+                throw new InvalidTriangleException("Invalid Triangle: Length " +
+                    "of leg b is greater than length of the hypotenuse.");
+            }
+
+            if (b == 0 || c == 0)
+            {
+                throw new InvalidInputException("Invalid Inputs: Too few " +
+                    "inputs given for Pythagorean Solve operation.");
             }
 
             float bSqr = Mathf.Pow(b, 2);
@@ -109,24 +139,42 @@ public class PythagoreanSolve : ScriptableObject, ICustomOperation
                     "greater than length of hypotenuse.");
             }
 
+            if (a == 0 || c == 0)
+            {
+                throw new InvalidInputException("Invalid Inputs: Too few " +
+                    "inputs given for Pythagorean Solve operation.");
+            }
+
             float aSqr = Mathf.Pow(a, 2);
             float cSqr = Mathf.Pow(c, 2);
             float bSqr = cSqr - aSqr;
 
             return Mathf.Sqrt(bSqr).ToString();
         }
-        else
+        else if (c == 0)
         {
-            // c must be = 0.
-
             // The lengths for both legs (a & b) are given, solve for the 
             // hypotenuse (c).
+
+            if (a == 0 || b == 0)
+            {
+                throw new InvalidInputException("Invalid Inputs: Too few " +
+                    "inputs given for Pythagorean Solve operation.");
+            }
 
             float aSqr = Mathf.Pow(a, 2);
             float bSqr = Mathf.Pow(b, 2);
             float cSqr = aSqr + bSqr;
 
             return Mathf.Sqrt(cSqr).ToString();
+        }
+        else
+        {
+            // a, b, and c are all populated. Therefore, too many inputs have
+            // been given for this operation.
+            
+            throw new InvalidInputException("Invalid Inputs: Too many " +
+                "inputs given for Pythagorean Solve operation.");
         }
     }
     #endregion

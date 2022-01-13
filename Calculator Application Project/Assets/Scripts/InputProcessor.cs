@@ -1,14 +1,9 @@
 using System.Linq;
 using System.Collections.Generic;
-using TMPro;
 using UnityEngine;
 
-// TODO: Create InputRelay class that sits between the GUI and the input 
-// processors decides which of the processors will be receiving input from the 
-// GUI.
-
 // TODO: Rename and better document this class.
-// TODO: This class is enormous, look for ways to refactor.
+// TODO: This class is enormous, look for meaningful ways to refactor.
 
 /// <summary>
 /// Receives input from the calculator GUI to use in infix expression evaluation.
@@ -41,7 +36,7 @@ public class InputProcessor : MonoBehaviour
     /// True if the calculator has already been cleared once.
     /// </summary>
     public bool ClearedOnce { get; set; }
-    
+
     /// <summary>
     /// Operand the user is currently entering.
     /// </summary>
@@ -69,7 +64,7 @@ public class InputProcessor : MonoBehaviour
     private Calculator calculator;
 
     #region MonoBehaviour Methods
-    private void Awake()
+    private void Start()
     {
         Initialize();
     }
@@ -330,6 +325,11 @@ public class InputProcessor : MonoBehaviour
             {
                 CurrentOperand =
                     CurrentOperand.Substring(1, CurrentOperand.Length - 1);
+            }
+
+            if (IsResult)
+            {
+                IsResult = false;
             }
 
             UpdateCurrentOperand?.Invoke(CurrentOperand);
