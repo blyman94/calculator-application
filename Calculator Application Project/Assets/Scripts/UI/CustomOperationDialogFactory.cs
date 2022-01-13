@@ -16,13 +16,13 @@ public class CustomOperationDialogFactory : MonoBehaviour
     [SerializeField] private ObjectPooler argumentDisplayPooler;
 
     /// <summary>
-    /// Custom input processor that will drive GUI updates during the custom
+    /// Custom operation processor that will drive GUI updates during the custom
     /// operation execution.
     /// </summary>
     [SerializeField]
-    [Tooltip("Custom input processor that will drive GUI updates during " +
+    [Tooltip("Custom operation processor that will drive GUI updates during " +
         "the custom operation execution.")]
-    private CustomOperationInputProcessor customOperationInputProcessor;
+    private CustomOperationProcessor customOperationProcessor;
 
     [Header("GUI Elements")]
     /// <summary>
@@ -116,10 +116,10 @@ public class CustomOperationDialogFactory : MonoBehaviour
             }
         }
 
-        if (customOperationInputProcessor != null)
+        if (customOperationProcessor != null)
         {
-            customOperationInputProcessor.CustomOperation = customOperation;
-            customOperationInputProcessor.ArgumentDisplays = argumentDisplays;
+            customOperationProcessor.CustomOperation = customOperation;
+            customOperationProcessor.ArgumentDisplays = argumentDisplays;
         }
     }
 }

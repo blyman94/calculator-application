@@ -5,39 +5,12 @@ using UnityEngine;
 /// <summary>
 /// Receives input from the calculator GUI to use in infix expression evaluation.
 /// </summary>
-public class InputProcessor : MonoBehaviour
+public class InfixExpressionProcessor : MonoBehaviour, IInputProcessor
 {
-    #region Delegates
-    /// <summary>
-    /// Delegate to signal an update to the clear button.
-    /// </summary>
-    public UpdateClear UpdateClear;
-
-    /// <summary>
-    /// Delegate to signal a current operand update.
-    /// </summary>
-    public UpdateCurrentOperand UpdateCurrentOperand;
-
-    /// <summary>
-    /// Delegate to signal a current expression update.
-    /// </summary>
-    public UpdateCurrentExpression UpdateCurrentExpression;
-
-    /// <summary>
-    /// Delegate to signal an error update.
-    /// </summary>
-    public UpdateError UpdateError;
-    #endregion
-
     /// <summary>
     /// True if the calculator has already been cleared once.
     /// </summary>
     public bool ClearedOnce { get; set; }
-
-    /// <summary>
-    /// Operand the user is currently entering.
-    /// </summary>
-    public string CurrentOperand { get; set; }
 
     /// <summary>
     /// The expresison the user is currently building for evaluation.
@@ -65,6 +38,18 @@ public class InputProcessor : MonoBehaviour
     {
         Initialize();
     }
+    #endregion
+
+    #region IInputProcessor Methods
+    public string CurrentOperand { get; set; }
+
+    public UpdateClear UpdateClear { get; set; }
+
+    public UpdateCurrentOperand UpdateCurrentOperand { get; set; }
+
+    public UpdateCurrentExpression UpdateCurrentExpression { get; set; }
+
+    public UpdateError UpdateError { get; set; }
     #endregion
 
     /// <summary>
@@ -296,8 +281,8 @@ public class InputProcessor : MonoBehaviour
     }
 
     /// <summary>
-    /// Initializes the calculator and resets the InputProcessor to an initial 
-    /// state.
+    /// Initializes the calculator and resets the InfixExpressionProcessor to an 
+    /// initial state.
     /// </summary>
     public void Initialize()
     {
@@ -334,9 +319,9 @@ public class InputProcessor : MonoBehaviour
     }
 
     /// <summary>
-    /// Resets the InputProcessor to its initial state, where the current 
-    /// operand and expression are empty, the current operand is not a result,
-    /// and the unmatched parenthesis count is 0.
+    /// Resets the InfixExpressionProcessor to its initial state, where the 
+    /// current operand and expression are empty, the current operand is not a 
+    /// result, and the unmatched parenthesis count is 0.
     /// </summary>
     private void Reset()
     {

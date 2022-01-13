@@ -4,35 +4,13 @@ using UnityEngine;
 /// <summary>
 /// Receives input from the calculator GUI to use in custom operations 
 /// </summary>
-public class CustomOperationInputProcessor : MonoBehaviour
+public class CustomOperationProcessor : MonoBehaviour, IInputProcessor
 {
-    #region Delegates
-    /// <summary>
-    /// Delegate to signal an update to the clear button.
-    /// </summary>
-    public UpdateClear UpdateClear;
-
-    /// <summary>
-    /// Delegate to signal a current operand update.
-    /// </summary>
-    public UpdateCurrentOperand UpdateCurrentOperand;
-
-    /// <summary>
-    /// Delegate to signal an error update.
-    /// </summary>
-    public UpdateError UpdateError;
-    #endregion
-
     /// <summary>
     /// The index of the argument of the custom operation that is currently
     /// accepting input.
     /// </summary>
     public int CurrentArgumentIndex { get; set; }
-
-    /// <summary>
-    /// Operand the user is currently entering.
-    /// </summary>
-    public string CurrentOperand { get; set; }
 
     /// <summary>
     /// Number of arguments in the custom operation.
@@ -45,7 +23,7 @@ public class CustomOperationInputProcessor : MonoBehaviour
     /// </summary>
     [Tooltip("Input Processor handling the infix expression evaluation of " +
         "the calculator.")]
-    [SerializeField] private InputProcessor inputProcessor;
+    [SerializeField] private InfixExpressionProcessor infixExpressionProcessor;
 
     [Header("Events")]
     /// <summary>
@@ -75,6 +53,18 @@ public class CustomOperationInputProcessor : MonoBehaviour
     /// Custom Operation the processor is currently concerned with.
     /// </summary>
     private ICustomOperation customOperation;
+
+    #region IInputProcessor Methods
+    public string CurrentOperand { get; set; }
+
+    public UpdateClear UpdateClear { get; set; }
+
+    public UpdateCurrentOperand UpdateCurrentOperand { get; set; }
+
+    public UpdateCurrentExpression UpdateCurrentExpression { get; set; }
+
+    public UpdateError UpdateError { get; set; }
+    #endregion
 
     /// <summary>
     /// List of argument display objects that will allow the user to enter 
@@ -293,7 +283,7 @@ public class CustomOperationInputProcessor : MonoBehaviour
                 CurrentArgumentIndex = 0;
                 string result = customOperation.Execute(argumentArray);
                 UpdateCurrentOperand?.Invoke(result);
-                inputProcessor.CurrentOperand = result;
+                infixExpressionProcessor.CurrentOperand = result;
                 UpdateError?.Invoke("");
             }
             catch (CalculatorException e)

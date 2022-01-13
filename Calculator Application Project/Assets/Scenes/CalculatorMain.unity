@@ -352,7 +352,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4f06752f4c149f442a68549980f38404, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  inputProcessor: {fileID: 1478960032}
+  infixExpressionProcessor: {fileID: 1478960032}
   customOpProcessor: {fileID: 339402434}
 --- !u!1 &26686835
 GameObject:
@@ -2193,7 +2193,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   argumentDisplayPooler: {fileID: 11400000, guid: 033a4fbe781024c43993894ec133d251, type: 2}
-  customOperationInputProcessor: {fileID: 339402434}
+  customOperationProcessor: {fileID: 339402434}
   argumentContentTransform: {fileID: 944582226}
   descriptionText: {fileID: 296251061}
   instructionText: {fileID: 958912339}
@@ -2336,9 +2336,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 199d18d3c89c19641ae850f66cac9d4f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  infixExpressionProcessor: {fileID: 1478960032}
   ExecuteCustomOperationEvent: {fileID: 11400000, guid: e54ab03576b54f649aa39595e8bf811c, type: 2}
   HideCustomOperationDialogEvent: {fileID: 11400000, guid: 7e3d6d05ec8f20c489d7cf46c69a21d9, type: 2}
-  inputProcessor: {fileID: 1478960032}
 --- !u!114 &339402435
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2747,7 +2747,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 218.2
+  m_fontSize: 215.85
   m_fontSizeBase: 224
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -6829,12 +6829,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c43bb3fc362a3764e9735370db4ad002, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  infixExpressionProcessor: {fileID: 1478960032}
+  customOperationProcessor: {fileID: 339402434}
   currentOperandText: {fileID: 377253211}
   clearClearEntryText: {fileID: 905590097}
   currentExpressionText: {fileID: 1131390176}
   errorDisplayText: {fileID: 1872671157}
-  inputProcessor: {fileID: 1478960032}
-  customOperationInputProcessor: {fileID: 339402434}
 --- !u!1 &1504490247
 GameObject:
   m_ObjectHideFlags: 0

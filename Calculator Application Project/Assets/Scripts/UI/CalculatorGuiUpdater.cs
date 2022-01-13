@@ -7,6 +7,22 @@ using UnityEngine;
 /// </summary>
 public class CalculatorGuiUpdater : MonoBehaviour
 {
+    [Header("Input Processors")]
+    /// <summary>
+    /// Input processor based on which this class will update the GUI.
+    /// </summary>
+    [Tooltip("Input processor based on which this class will update the GUI.")]
+    [SerializeField] private InfixExpressionProcessor infixExpressionProcessor;
+
+    /// <summary>
+    /// Custom operation processor based on which this class will update the 
+    /// GUI.
+    /// </summary>
+    [Tooltip("Custom operation processor based on which this class will " +
+        "update the GUI.")]
+    [SerializeField] private CustomOperationProcessor customOperationProcessor;
+
+    [Header("GUI Elements")]
     /// <summary>
     /// Text object that displays the operand the user is currently entering.
     /// </summary>
@@ -35,19 +51,6 @@ public class CalculatorGuiUpdater : MonoBehaviour
     [Tooltip("Text object that displays the current error to the user.")]
     [SerializeField] private TextMeshProUGUI errorDisplayText;
 
-    /// <summary>
-    /// Input processor based on which this class will update the GUI.
-    /// </summary>
-    [Tooltip("Input processor based on which this class will update the GUI.")]
-    [SerializeField] private InputProcessor inputProcessor;
-
-    /// <summary>
-    /// Input processor based on which this class will update the GUI.
-    /// </summary>
-    [Tooltip("Input processor based on which this class will update the GUI.")]
-    [SerializeField]
-    private CustomOperationInputProcessor customOperationInputProcessor;
-
     #region MonoBehaviour Methods
     private void OnEnable()
     {
@@ -61,46 +64,46 @@ public class CalculatorGuiUpdater : MonoBehaviour
     #endregion
 
     /// <summary>
-    /// TODO: Subscribes to all delegates of interest from the InputProcessor and 
-    /// CustomOperationInputProcessor classes.
+    /// Subscribes to all delegates of interest from the 
+    /// InfixExpressionProcessor and CustomOperationProcessor classes.
     /// </summary>
     private void SubscribeToDelegates()
     {
-        if (inputProcessor != null)
+        if (infixExpressionProcessor != null)
         {
-            inputProcessor.UpdateClear += UpdateClearText;
-            inputProcessor.UpdateCurrentExpression += UpdateExpressionText;
-            inputProcessor.UpdateCurrentOperand += UpdateCurrentOperandText;
-            inputProcessor.UpdateError += UpdateErrorText;
+            infixExpressionProcessor.UpdateClear += UpdateClearText;
+            infixExpressionProcessor.UpdateCurrentExpression += UpdateExpressionText;
+            infixExpressionProcessor.UpdateCurrentOperand += UpdateCurrentOperandText;
+            infixExpressionProcessor.UpdateError += UpdateErrorText;
         }
-        if (customOperationInputProcessor != null)
+        if (customOperationProcessor != null)
         {
-            customOperationInputProcessor.UpdateClear += UpdateClearText;
-            customOperationInputProcessor.UpdateCurrentOperand +=
+            customOperationProcessor.UpdateClear += UpdateClearText;
+            customOperationProcessor.UpdateCurrentOperand +=
                 UpdateCurrentOperandText;
-            customOperationInputProcessor.UpdateError += UpdateErrorText;
+            customOperationProcessor.UpdateError += UpdateErrorText;
         }
     }
 
     /// <summary>
-    /// TODO: Unsubscribes from all delegates of interest from the InputProcessor 
-    /// and CustomOperationInputProcessor classes.
+    /// Unsubscribes from all delegates of interest from the 
+    /// InfixExpressionProcessor and CustomOperationProcessor classes.
     /// </summary>
     private void UnsubscribeFromDelegates()
     {
-        if (inputProcessor != null)
+        if (infixExpressionProcessor != null)
         {
-            inputProcessor.UpdateClear -= UpdateClearText;
-            inputProcessor.UpdateCurrentExpression -= UpdateExpressionText;
-            inputProcessor.UpdateCurrentOperand -= UpdateCurrentOperandText;
-            inputProcessor.UpdateError -= UpdateErrorText;
+            infixExpressionProcessor.UpdateClear -= UpdateClearText;
+            infixExpressionProcessor.UpdateCurrentExpression -= UpdateExpressionText;
+            infixExpressionProcessor.UpdateCurrentOperand -= UpdateCurrentOperandText;
+            infixExpressionProcessor.UpdateError -= UpdateErrorText;
         }
-        if (customOperationInputProcessor != null)
+        if (customOperationProcessor != null)
         {
-            customOperationInputProcessor.UpdateClear -= UpdateClearText;
-            customOperationInputProcessor.UpdateCurrentOperand -=
+            customOperationProcessor.UpdateClear -= UpdateClearText;
+            customOperationProcessor.UpdateCurrentOperand -=
                 UpdateCurrentOperandText;
-            customOperationInputProcessor.UpdateError -= UpdateErrorText;
+            customOperationProcessor.UpdateError -= UpdateErrorText;
         }
     }
 

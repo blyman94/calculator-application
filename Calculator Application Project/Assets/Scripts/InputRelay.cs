@@ -19,16 +19,18 @@ public class InputRelay : MonoBehaviour
 
     [Header("Input Processors")]
     /// <summary>
-    /// TODO: Input processor for regular infix expression evaluation operations.
+    /// Infix expression processor for regular infix expression evaluation 
+    /// operations.
     /// </summary>
-    [Tooltip("Input processor for regular infix expression evaluation operations.")]
-    [SerializeField] private InputProcessor inputProcessor;
+    [Tooltip("Infix expression processor for infix expression evaluation " + 
+        "operations.")]
+    [SerializeField] private InfixExpressionProcessor infixExpressionProcessor;
 
     /// <summary>
     /// Custom operation input processor for all custom operations.
     /// </summary>
     [Tooltip("Custom operation input processor for all custom operations.")]
-    [SerializeField] private CustomOperationInputProcessor customOpProcessor;
+    [SerializeField] private CustomOperationProcessor customOpProcessor;
 
     #region MonoBehaviour Methods
     private void Awake()
@@ -39,13 +41,13 @@ public class InputRelay : MonoBehaviour
     #endregion
 
     /// <summary>
-    /// Adds an operator to the inputProcessor if the user is not currently 
-    /// executing a custom operation. Custom operation do not accept operators,
-    /// therefore the method will do nothing if the user is currently executing
-    /// a custom operation.
+    /// Adds an operator to the InfixExpressionProcessor if the user is not 
+    /// currently executing a custom operation. Custom operation do not accept 
+    /// operators, therefore the method will do nothing if the user is currently 
+    /// executing a custom operation.
     /// </summary>
-    /// <param name="operatorString">Operator to be passed to 
-    /// inputProcessor.</param>
+    /// <param name="operatorString">Operator to be passed to the 
+    /// InfixExpressionProcessor.</param>
     public void AddOperator(string operatorString)
     {
         if (IsCustomOperationSelection || IsCustomOperation)
@@ -53,17 +55,17 @@ public class InputRelay : MonoBehaviour
             return;
         }
 
-        if (inputProcessor != null)
+        if (infixExpressionProcessor != null)
         {
-            inputProcessor.AddOperator(operatorString);
+            infixExpressionProcessor.AddOperator(operatorString);
         }
     }
 
     /// <summary>
-    /// Adds a parenthesis to the inputProcessor if the user is not currently 
-    /// executing a custom operation. Custom operation do not accept parens,
-    /// therefore the method will do nothing if the user is currently executing
-    /// a custom operation.
+    /// Adds a parenthesis to the InfixExpressionProcessor if the user is not 
+    /// currently executing a custom operation. Custom operations do not accept 
+    /// parens, therefore the method will do nothing if the user is currently 
+    /// executing a custom operation.
     /// </summary>
     public void AddParen()
     {
@@ -72,9 +74,9 @@ public class InputRelay : MonoBehaviour
             return;
         }
 
-        if (inputProcessor != null)
+        if (infixExpressionProcessor != null)
         {
-            inputProcessor.AddParen();
+            infixExpressionProcessor.AddParen();
         }
     }
 
@@ -101,9 +103,9 @@ public class InputRelay : MonoBehaviour
         }
         else
         {
-            if (inputProcessor != null)
+            if (infixExpressionProcessor != null)
             {
-                inputProcessor.AddToCurrentInput(input);
+                infixExpressionProcessor.AddToCurrentInput(input);
             }
         }
     }
@@ -128,9 +130,9 @@ public class InputRelay : MonoBehaviour
         }
         else
         {
-            if (inputProcessor != null)
+            if (infixExpressionProcessor != null)
             {
-                inputProcessor.Backspace();
+                infixExpressionProcessor.Backspace();
             }
         }
     }
@@ -155,9 +157,9 @@ public class InputRelay : MonoBehaviour
         }
         else
         {
-            if (inputProcessor != null)
+            if (infixExpressionProcessor != null)
             {
-                inputProcessor.ClearInput();
+                infixExpressionProcessor.ClearInput();
             }
         }
     }
@@ -183,9 +185,9 @@ public class InputRelay : MonoBehaviour
         }
         else
         {
-            if (inputProcessor != null)
+            if (infixExpressionProcessor != null)
             {
-                inputProcessor.Execute();
+                infixExpressionProcessor.Execute();
             }
         }
     }
@@ -210,9 +212,9 @@ public class InputRelay : MonoBehaviour
         }
         else
         {
-            if (inputProcessor != null)
+            if (infixExpressionProcessor != null)
             {
-                inputProcessor.ToggleNegative();
+                infixExpressionProcessor.ToggleNegative();
             }   
         }
     }

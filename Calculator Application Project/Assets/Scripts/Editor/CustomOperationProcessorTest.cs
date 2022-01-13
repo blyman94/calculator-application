@@ -3,17 +3,17 @@ using UnityEngine;
 using NSubstitute;
 
 /// <summary>
-/// Collection of unit tests for the CustomOperationInputProcessor class.
+/// Collection of unit tests for the CustomOperationProcessor class.
 /// </summary>
-public class CustomOperationInputProcessorTest
+public class CustomOperationProcessorTest
 {
     #region AddToCurrentInput Tests
     [Test]
     public void AddToCurrentInput_InputIsDecimalAndAllowsDecimalAndCurrentOperandEmpty_AddZeroAndDecimal()
     {
         GameObject go = new GameObject();
-        CustomOperationInputProcessor customOpProcessor = 
-            go.AddComponent<CustomOperationInputProcessor>();
+        CustomOperationProcessor customOpProcessor = 
+            go.AddComponent<CustomOperationProcessor>();
 
         ICustomOperation customOpSub = Substitute.For<ICustomOperation>();
         customOpSub.AllowsDecimal.Returns(true);
@@ -30,8 +30,8 @@ public class CustomOperationInputProcessorTest
     public void AddToCurrentInput_InputIsDecimalAndAllowsDecimalAndCurrentOperandNotEmptyAndContainsDecimal_NoChange()
     {
         GameObject go = new GameObject();
-        CustomOperationInputProcessor customOpProcessor =
-            go.AddComponent<CustomOperationInputProcessor>();
+        CustomOperationProcessor customOpProcessor =
+            go.AddComponent<CustomOperationProcessor>();
 
         ICustomOperation customOpSub = Substitute.For<ICustomOperation>();
         customOpSub.AllowsDecimal.Returns(true);
@@ -48,8 +48,8 @@ public class CustomOperationInputProcessorTest
     public void AddToCurrentInput_InputIsDecimalAndAllowsDecimalAndCurrentOperandNotEmptyAndDoesNotContainDecimal_AddDecimal()
     {
         GameObject go = new GameObject();
-        CustomOperationInputProcessor customOpProcessor =
-            go.AddComponent<CustomOperationInputProcessor>();
+        CustomOperationProcessor customOpProcessor =
+            go.AddComponent<CustomOperationProcessor>();
 
         ICustomOperation customOpSub = Substitute.For<ICustomOperation>();
         customOpSub.AllowsDecimal.Returns(true);
@@ -66,8 +66,8 @@ public class CustomOperationInputProcessorTest
     public void AddToCurrentInput_InputIsDecimalAndDoesNotAllowDecimalAndCurrentOperandEmpty_IsZero()
     {
         GameObject go = new GameObject();
-        CustomOperationInputProcessor customOpProcessor =
-            go.AddComponent<CustomOperationInputProcessor>();
+        CustomOperationProcessor customOpProcessor =
+            go.AddComponent<CustomOperationProcessor>();
 
         ICustomOperation customOpSub = Substitute.For<ICustomOperation>();
         customOpSub.AllowsDecimal.Returns(false);
@@ -84,8 +84,8 @@ public class CustomOperationInputProcessorTest
     public void AddToCurrentInput_InputIsDecimalAndDoesNotAllowDecimalAndCurrentOperandNotEmpty_NoChange()
     {
         GameObject go = new GameObject();
-        CustomOperationInputProcessor customOpProcessor =
-            go.AddComponent<CustomOperationInputProcessor>();
+        CustomOperationProcessor customOpProcessor =
+            go.AddComponent<CustomOperationProcessor>();
 
         ICustomOperation customOpSub = Substitute.For<ICustomOperation>();
         customOpSub.AllowsDecimal.Returns(false);
@@ -102,8 +102,8 @@ public class CustomOperationInputProcessorTest
     public void AddToCurrentInput_InputIsIntegerAndCurrentOperandIsZero_ChangeToInput()
     {
         GameObject go = new GameObject();
-        CustomOperationInputProcessor customOpProcessor =
-            go.AddComponent<CustomOperationInputProcessor>();
+        CustomOperationProcessor customOpProcessor =
+            go.AddComponent<CustomOperationProcessor>();
 
         customOpProcessor.CurrentOperand = "0";
 
@@ -116,8 +116,8 @@ public class CustomOperationInputProcessorTest
     public void AddToCurrentInput_InputIsIntegerAndCurrentOperandIsNotZero_AddInput()
     {
         GameObject go = new GameObject();
-        CustomOperationInputProcessor customOpProcessor =
-            go.AddComponent<CustomOperationInputProcessor>();
+        CustomOperationProcessor customOpProcessor =
+            go.AddComponent<CustomOperationProcessor>();
 
         customOpProcessor.CurrentOperand = "1";
 
@@ -130,8 +130,8 @@ public class CustomOperationInputProcessorTest
     public void AddToCurrentInput_InputIsZeroAndCurrentOperandEmpty_IsZero()
     {
         GameObject go = new GameObject();
-        CustomOperationInputProcessor customOpProcessor =
-            go.AddComponent<CustomOperationInputProcessor>();
+        CustomOperationProcessor customOpProcessor =
+            go.AddComponent<CustomOperationProcessor>();
 
         customOpProcessor.CurrentOperand = "";
 
@@ -144,8 +144,8 @@ public class CustomOperationInputProcessorTest
     public void AddToCurrentInput_InputIsZeroAndCurrentOperandNotEmptyAndCurrentOpreandIsZero_NoChange()
     {
         GameObject go = new GameObject();
-        CustomOperationInputProcessor customOpProcessor =
-            go.AddComponent<CustomOperationInputProcessor>();
+        CustomOperationProcessor customOpProcessor =
+            go.AddComponent<CustomOperationProcessor>();
 
         customOpProcessor.CurrentOperand = "0";
 
@@ -158,8 +158,8 @@ public class CustomOperationInputProcessorTest
     public void AddToCurrentInput_InputIsZeroAndCurrentOperandNotEmptyAndCurrentOpreandNotZero_AddInput()
     {
         GameObject go = new GameObject();
-        CustomOperationInputProcessor customOpProcessor =
-            go.AddComponent<CustomOperationInputProcessor>();
+        CustomOperationProcessor customOpProcessor =
+            go.AddComponent<CustomOperationProcessor>();
 
         customOpProcessor.CurrentOperand = "1";
 
@@ -174,8 +174,8 @@ public class CustomOperationInputProcessorTest
     public void Backspace_CurrentOperandNotEmpty_RemovesLastCharacterFromCurrentOperand()
     {
         GameObject go = new GameObject();
-        CustomOperationInputProcessor customOpProcessor =
-            go.AddComponent<CustomOperationInputProcessor>();
+        CustomOperationProcessor customOpProcessor =
+            go.AddComponent<CustomOperationProcessor>();
 
         customOpProcessor.CurrentOperand = "506";
 
@@ -190,8 +190,8 @@ public class CustomOperationInputProcessorTest
     public void ClearInput_CurrentOperandEmpty_CurrentArgumentIndexDecrements()
     {
         GameObject go = new GameObject();
-        CustomOperationInputProcessor customOpProcessor =
-            go.AddComponent<CustomOperationInputProcessor>();
+        CustomOperationProcessor customOpProcessor =
+            go.AddComponent<CustomOperationProcessor>();
 
         customOpProcessor.CurrentOperand = "";
         customOpProcessor.CurrentArgumentIndex = 1;
@@ -205,8 +205,8 @@ public class CustomOperationInputProcessorTest
     public void ClearInput_CurrentOperandNotEmpty_CurrentOperandEmpty()
     {
         GameObject go = new GameObject();
-        CustomOperationInputProcessor customOpProcessor =
-            go.AddComponent<CustomOperationInputProcessor>();
+        CustomOperationProcessor customOpProcessor =
+            go.AddComponent<CustomOperationProcessor>();
 
         customOpProcessor.CurrentOperand = "5";
 
@@ -221,8 +221,8 @@ public class CustomOperationInputProcessorTest
     public void Enter_CurrentArgumentIndexLessThanNumArgsMinus1_CurrentArgumentIndexIncrements()
     {
         GameObject go = new GameObject();
-        CustomOperationInputProcessor customOpProcessor =
-            go.AddComponent<CustomOperationInputProcessor>();
+        CustomOperationProcessor customOpProcessor =
+            go.AddComponent<CustomOperationProcessor>();
 
         customOpProcessor.CurrentOperand = "5";
         customOpProcessor.NumArgs = 3;
@@ -237,8 +237,8 @@ public class CustomOperationInputProcessorTest
     public void Enter_CurrentArgumentIndexLessThanNumArgsMinus1_CurrentOperandEmpty()
     {
         GameObject go = new GameObject();
-        CustomOperationInputProcessor customOpProcessor =
-            go.AddComponent<CustomOperationInputProcessor>();
+        CustomOperationProcessor customOpProcessor =
+            go.AddComponent<CustomOperationProcessor>();
 
         customOpProcessor.CurrentOperand = "5";
         customOpProcessor.NumArgs = 3;
@@ -255,8 +255,8 @@ public class CustomOperationInputProcessorTest
     public void ToggleNegative_AllowsNegativeAndOperandNotEmptyAndNotAlreadyNegative_AddNegativeSign()
     {
         GameObject go = new GameObject();
-        CustomOperationInputProcessor customOpProcessor =
-            go.AddComponent<CustomOperationInputProcessor>();
+        CustomOperationProcessor customOpProcessor =
+            go.AddComponent<CustomOperationProcessor>();
 
         ICustomOperation customOpSub = Substitute.For<ICustomOperation>();
         customOpSub.AllowsNegative.Returns(true);
@@ -273,8 +273,8 @@ public class CustomOperationInputProcessorTest
     public void ToggleNegative_AllowsNegativeAndOperandNotEmptyAndAlreadyNegative_RemoveNegativeSign()
     {
         GameObject go = new GameObject();
-        CustomOperationInputProcessor customOpProcessor =
-            go.AddComponent<CustomOperationInputProcessor>();
+        CustomOperationProcessor customOpProcessor =
+            go.AddComponent<CustomOperationProcessor>();
 
         ICustomOperation customOpSub = Substitute.For<ICustomOperation>();
         customOpSub.AllowsNegative.Returns(true);
@@ -291,8 +291,8 @@ public class CustomOperationInputProcessorTest
     public void ToggleNegative_DoesNotAllowNegative_NoChange()
     {
         GameObject go = new GameObject();
-        CustomOperationInputProcessor customOpProcessor =
-            go.AddComponent<CustomOperationInputProcessor>();
+        CustomOperationProcessor customOpProcessor =
+            go.AddComponent<CustomOperationProcessor>();
 
         ICustomOperation customOpSub = Substitute.For<ICustomOperation>();
         customOpSub.AllowsNegative.Returns(false);
