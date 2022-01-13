@@ -10,6 +10,11 @@ using UnityEngine;
 public class CustomOperationDialogFactory : MonoBehaviour
 {
     /// <summary>
+    /// Object pooler for ArgumentDisplayPrefabs.
+    /// </summary>
+    [SerializeField] private ObjectPooler ArgumentDisplayPooler;
+
+    /// <summary>
     /// Custom input processor that will drive GUI updates during the custom
     /// operation execution.
     /// </summary>
@@ -59,8 +64,15 @@ public class CustomOperationDialogFactory : MonoBehaviour
     /// List of argument display objects that will allow the user to enter 
     /// arguments for the custom operation.
     /// </summary>
-    private List<ArgumentDisplay> argumentDisplays = 
+    private List<ArgumentDisplay> argumentDisplays =
         new List<ArgumentDisplay>();
+
+    #region MonoBehaviour Methods
+    private void Start()
+    {
+        ArgumentDisplayPooler.InitializePool(argumentContentTransform);
+    }
+    #endregion
 
     /// <summary>
     /// Changes the custom operation dialogue display to reflect the user 
@@ -72,15 +84,7 @@ public class CustomOperationDialogFactory : MonoBehaviour
     {
         argumentDisplays.Clear();
 
-        // TODO: Object pooling for argument display prefabs.
-        int childCount = argumentContentTransform.childCount;
-        if (childCount > 0)
-        {
-            for (int i = childCount - 1; i >= 0; i--)
-            {
-                Destroy(argumentContentTransform.GetChild(i).gameObject);
-            }
-        }
+        ArgumentDisplayPooler.DeactivateAll();
 
         titleText.text = customOperation.Name;
         descriptionText.text = customOperation.Description;
@@ -88,12 +92,17 @@ public class CustomOperationDialogFactory : MonoBehaviour
 
         foreach (string argumentLabel in customOperation.ArgumentLabels)
         {
-            GameObject argumentDisplayObject =
-                Instantiate(argumentDisplayPrefab, argumentContentTransform);
+            GameObject argumentDisplayObject = 
+                ArgumentDisplayPooler.GetObject();
             ArgumentDisplay argDisplay =
                 argumentDisplayObject.GetComponent<ArgumentDisplay>();
+
             argDisplay.SetArgumentLabelText(argumentLabel);
+            argDisplay.SetArgumentValueText("0");
+            argDisplay.Deactivate();
             argumentDisplays.Add(argDisplay);
+
+            argumentDisplayObject.SetActive(true);
         }
 
         customOperationInputProcessor.CustomOperation = customOperation;

@@ -9,11 +9,10 @@ using UnityEngine;
 public class CustomOperationLoader : MonoBehaviour
 {
     /// <summary>
-    /// Prefab representing the button used to select a custom operation.
+    /// Object pooler for OperationSelectionButtons.
     /// </summary>
-    [Tooltip("Prefab representing the button used to select a custom " + 
-        "operation.")]
-    [SerializeField] private GameObject selectButtonPrefab;
+    [Tooltip("Object pooler for OperationSelectionButtons.")]
+    [SerializeField] private ObjectPooler selectionButtonPooler;
 
     /// <summary>
     /// Transform whose children will represent custom operation options.
@@ -25,6 +24,7 @@ public class CustomOperationLoader : MonoBehaviour
     #region MonoBehaviour Methods
     private void Start()
     {
+        selectionButtonPooler.InitializePool(contentTransform);
         LoadCustomOperations();
     }
     #endregion
@@ -38,13 +38,17 @@ public class CustomOperationLoader : MonoBehaviour
         Object[] customOperationObjects =
                     Resources.LoadAll("CustomOperations", typeof(ScriptableObject));
 
+        selectionButtonPooler.DeactivateAll();
+
         foreach (Object operation in customOperationObjects)
         {
             ICustomOperation customOp = operation as ICustomOperation;
-            GameObject buttonObject = Instantiate(selectButtonPrefab, contentTransform);
+            GameObject buttonObject = selectionButtonPooler.GetObject();
             OperationSelectionButton opSelButton =
                 buttonObject.GetComponent<OperationSelectionButton>();
             opSelButton.CustomOperation = customOp;
+            
+            buttonObject.SetActive(true);
         }
     }
 }

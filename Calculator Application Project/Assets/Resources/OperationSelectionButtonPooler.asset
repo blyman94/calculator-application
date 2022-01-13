@@ -1,0 +1,17 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6a85b5a82cfe8c9459222148053cedcc, type: 3}
+  m_Name: OperationSelectionButtonPooler
+  m_EditorClassIdentifier: 
+  ObjectToPool: {fileID: 701138870323012100, guid: 2fdb2821e4a5ab842a334e37cbbf8d2b, type: 3}
+  InitialPoolSize: 5
+  CanGrow: 1
