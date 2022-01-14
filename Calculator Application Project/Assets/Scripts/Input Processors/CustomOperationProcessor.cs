@@ -272,7 +272,7 @@ public class CustomOperationProcessor : MonoBehaviour, IInputProcessor
             {
                 argumentDisplays[CurrentArgumentIndex].Activate();
             }
-            
+
             UpdateClear?.Invoke(CurrentOperand);
         }
         else
@@ -284,6 +284,7 @@ public class CustomOperationProcessor : MonoBehaviour, IInputProcessor
                 string result = customOperation.Execute(argumentArray);
                 UpdateCurrentOperand?.Invoke(result);
                 infixExpressionProcessor.CurrentOperand = result;
+                infixExpressionProcessor.IsResult = true;
                 UpdateError?.Invoke("");
             }
             catch (CalculatorException e)
