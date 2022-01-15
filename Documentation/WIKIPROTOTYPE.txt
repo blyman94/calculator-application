@@ -1,0 +1,24 @@
+#Prototype Design
+This page contains information on the pure C# prototype implementation.
+
+## Overview
+The application is prototyped in the pure C# environment. The prototype includes a fully functional primitive operation calculator and logic for each of the three custom operations to be shipped with the application. The application prototype runs from a static main method.
+
+## Prototype UML Diagram
+ADD LINK FOR UML DIAGRAM
+
+## Design
+The prototype begins in the main script (CalculatorApplication.cs) by showing the user a 0, followed by a prompt to enter an infix expression into the console separated by spaces. They are also given instructions on how to conduct one of the three custom operations shipped with the application. 
+
+The user's input is read in as a string array and is passed to the *Calculator* class. The calculator class contains each class representing the custom operations as data members. The calculator determines based on the user input which evaluation to perform based on the first input of the user-entered string array, either delgating the execution to a custom operation class or evaluating the expression itself. 
+
+Each custom operation class has an "Execute" method (perscribed by their interface) that accepts an array of strings as user input. The method by which the input is processed varies by class based on the algorithm they represent. 
+
+The calculator then returns the result of the evaluated input by printing the result to the console, and storing the result as a data member for use in upcoming calculations. 
+
+The user can then continue to operate on the result operand, or start a new calculation entirely. This will continue until the user enters nothing, which closes the program.
+
+#Where to Go Next
+Archived Design Doc (ADD LINK)
+
+See the first draft of this design wiki and see how the program design enhanced as it was coded!

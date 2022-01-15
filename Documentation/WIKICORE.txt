@@ -1,0 +1,76 @@
+#Core Design
+This page covers the aspects of the implementation that are common between the prototype and the production code bases.
+##Overview
+This application consists of a calculator capable of performing primitive operations on numeric values. The user is able to select integers 0 through 9 as values to operate upon. They may also create decimal values by using a decimal point. They are able to perform further operations on values resulting from the primitive operations. Finally, while the user is building their expression to evaluate, they can clear their last entry (ce), or the entire expression (c). 
+
+The calculator supports an arbitrary number of custom operations that can be executed by the user. When a custom operation is selected, the user can enter all necessary arguments to the operation, and the result will appear on the calculator’s display. The initial release of the calculator application is shipped with three custom operations: the Pythagorean solve operation, factorial operation, and the metric converter (inches-to-centimeters) operation.
+
+This application is programmed in the Unity/C# environment. It is available on PC/Mac/Linux systems and Android systems. It is for educational purposes only and is not marketed as a commercial product. 
+
+Please note that the wiki only describes high-level concepts, and may mention classes created for the application. For detailed information regarding individual classes, please refer to the DOCUMENTATION.
+
+##Algorithms and Theory
+### Operator Precedence
+The [order of operations](https://en.wikipedia.org/wiki/Order_of_operations) is as follows, in decending order of operator precedence:
+1. Exponentiation and root extraction
+2. Multiplication and division
+3. Addition and subtraction.
+A precedence value is assigned to operators based on this hierarchy to ensure the application properly applies the order of operations. To achieve this, a dictionary is used. Dictionary keys are representations of the operator as a string, and dictionary values are representations of the operators precedence value as an integer. The greater the integer value, the higher the precedence of the associated key's represented operator. Left parentheses (or *parens*) are assigned the lowest precedence value among operators. Right parens are considered operators by the algorithm, but are not assigned a precedence value (see xxx for details, add link). This precedence dictionary is referenced during the infix-to-postfix expression (add link?) conversion. Note that root extraction is not included as a primitive operation in this application.
+### Operator Associativity
+Operators with the same precedence are evaluated based on their associativity behavior. Associativity determines in which order two operations of the same precedence should be evaluated. If two operators have the same precedence value and the incoming operator is left-associative, the incoming operator will be treated during the conversion as if it has a lower precedence value than the other operator. Conversly, if two operators have the same precedence and the incoming operator is right-associative, the incoming operator will be treated during the conversion as if it has a lower precedence value than the other operator. Multiplication, division, addition and subtraction are left-associative and exponentiation is right-associative.
+### Infix-to-Postfix Expression Conversion
+The purpose of this step is to convert an expression readable to humans (infix) to one that is readable by the program (postfix). The [shunting-yard algorithm](https://en.wikipedia.org/wiki/Shunting-yard_algorithm) is an algorithm that achieves this conversion and is as follows:
+1. Create an empty stack for operator storage (referred to hereafter as "S"), and an empty string to ctore the result of the conversion (referred to hereafter as "R").
+2.Parse the infix expression array from left to right. For each token:
+
+  a.If the token is an operand, append it to R.
+  
+  b.If the token is a left paren, push it into S. 
+
+  c.If the token is a right paren, pop S until a left paren is popped. Append each operator to R, excluding the parenthesis.
+
+  d.If the token is an operator (*,/,+,-,^), push it into S, but first pop any existing operators in the stack with a higher precedence (or an equal precedence if the token operator is left-associative) and append them to R.
+3.When the infix expression is fully parsed, pop each of the remaining operators in S and append them to R.
+The resulting postfix expression can be evaluated to obtain the resulting value of the original infix expression.
+
+### Postfix Expression Evaluation
+The algorithm to evaluate the postfix expression read in as a string array are as follows (adapted from [Runestone.Academy](https://runestone.academy/ns/books/published//pythonds/BasicDS/InfixPrefixandPostfixExpressions.html)):
+
+The algorithm to evaluate the postfix expression read in as a string array are as follows :
+1.Create an empty stack for operand storage (referred to hereafter as “S”).
+2.Parse the postfix expression array from left to right. For each token:
+
+  a.If the token is an operand, convert it to a float and push the value into S.
+  
+  b.If the token is an operator, pop the operand stack twice. The first pop will return the right operand, and the second pop will return the left operand. Perform the primitive operation, and push the resulting value into S.
+3. When the postfix expression is fully parsed, the result is at the top of the stack. Pop the operand stack to return the value.
+
+A switch statement is used to determine which primitive operation should be performed. The application is concerned with only 5 primitive operations, and additional primitive operations are not anticipated at this time. Therefore, it is logical, concise, and intuitive to use a switch statement.
+###Custom Operations
+Custom operations are defined as those that cannot be conducted with primitive operators alone. This application is shipped with three custom operations that enhance its functionality. They are as follows:
+
+1. Pythagorean Solve - The [Pythagorean Theorem](https://en.wikipedia.org/wiki/Pythagorean_theorem) can be used to determine the length of one side of a right triangle given the legnth of the other two sides. The Pythagorean solve custom operation will accept two side lengths for a triangle and calculate the length of the missing side.
+2. Factorial - The [factorial operation](https://en.wikipedia.org/wiki/Factorial) (!) returns the product of all positive integers less than or equal to the operand *n*. A simple recursive algorithm is used to calculate the value of the factorial.
+3. Metric Converter Operation (Inches-to-Centimeters)- A length represented in inches can be converted to centimeters by multiplying the operand by 2.54. The metric converter operation will accept a positive number representing a length and will return the equivalent length in centimeters.
+## Exception Management
+The algorithms detailed are vulnerable to several errors due to the freedom of user input. A child class of the native *Exception* class has been created called *Calculator Exception*. The *Calculator Exception* class is used to throw exceptions that result from errors in the calculator algorithms described above. Furthermore, four child classes have been created to further classify the exceptions.
+1.Invalid Expression Exception - Thrown when an expression that cannot be converted by the shunting-yard algorithm is passed the infix-to-postfix expression conversion method. For example, this exception will be thrown if an expression is passed to the algorithm that contains mismatched parens.
+2. Invalid Input Exception - Thrown when an set of inputs is passed to a custom operation that do not satisfy the requirements of that custom operation. For example, the Pythagorean Solve operation requires exactly two inputs representing the known sides of the triangle. If the input does not have exactly two inputs, this exception will be thrown.
+3. Invalid Token Exception (Prototype Only) - Thrown when a character is passed to the infix expression evaluation or a custom operation that is neither a digit (0-9), an operator (^,*,/,+,-), a decimal point, nor a paren. 
+4. Invalid Triangle Exception - Thrown when the arguments to the Pythagorean Solve custom operation would represent an impossible triangle upon evaluation. For example, a right triangle cannot have a hypotenuse that is shorter than any one of its other sides. Therefore, a triangle passed in with these parameters would throw this exception.
+
+*Calculator Exceptions* are tested at critical points in each algorithm, where the specific exception would break the execution flow of the operation. Try-catch loops are used to detect *Calculator Exceptions* Each exception is thrown with a message string that can be accessed by other classes.
+## Unit Testing
+Unit tests were written in the spirit of creating a clean, safe, and scalable code base. The general philosophy and methodology for how unit tests were designed is described in this section. More detail for individual unit testing classes can be found in the DOCUMENTATION.
+
+All unit testing was conducted only on the backend calculation engine. Tests were designed to test specific functionality of a single method within a class. The tests were named using the following convention: NameOfMethod_ConditionsOfTest_ExpectedResultOfTest. Because the tests were named in this manner, reviewing the DOCUMENTATION will give the reader a complete understanding of each test and its intentions. More tests were completed for class methods with many possible conditions. 
+
+Some test were intended to ensure that evaluations of expressions and custom operations produced their intended result. Since the application is meant to simulate a calculator, a physical calculator was used to generated expected results for tests. During the design phase for these tests, combinations of all possible input types and formats were tested to ensure the result is always expected.
+
+Other tests were intended to ensure that the calculator threw *Calculator Exceptions* when they were expected to. During the design phase for these tests, the developer attempted to cover an exhaustive list of all possible invalid inputs the user could provide to the backend. As more bugs are found and updates are made to the main code base, this list may grow.
+
+## Where to Go Next
+Production Design (add link)
+
+
+Since this page details only what is common between the C# prototype and the Unity production app, you can proceed to the Production Design (add link) page to learn more about the shipped product's design.

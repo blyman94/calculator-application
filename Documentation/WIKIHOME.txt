@@ -1,0 +1,13 @@
+#Home
+This page is the homepage for the Calculator Application wiki.
+## Welcome to the Calculator Application wiki!
+This wiki consists of five other pages: Core Design, Prototype Design, Production Design, Game Elements, and Archived Design Document.
+
+For information on installation, usage, and references, please refer to the README file.
+
+For information on licensing, please read the LICENSE file.
+
+##Where to Go Next
+Core Design (ADD LINK)
+
+Read about the design aspects both the prototype and production applications implement.

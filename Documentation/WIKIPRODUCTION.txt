@@ -1,0 +1,45 @@
+#Production Desgin
+
+##Overview
+
+##Production UML Diagrams (abbreviated)
+Note some classes have been omitted from the UML diagrams for brevity.
+### Backend UML Diagram
+IMAGE
+### Frontend UML Diagram
+IMAGE
+### Calculator Exceptions UML Diagram
+IMAGE
+### Custom Operations UML Diagram
+IMAGE
+
+
+##Design
+Classes will be referenced throughout this section. Please refer to the UML diagrams above and the DOCUMENTATION for a better understanding of individual classes. 
+
+The application consists of a frontend virtual calculator GUI with buttons representing the following inputs:
+1. All digits (0-9)
+2. A decimal point
+3. Operators (^,*,/,+,-)
+4. Parentheses (parens)
+5. Clear/Clear Entry
+6. Enter
+
+The virtual calculator also has a screen upon which the following elements are overlayed:
+1. Current operand (current number being entered)
+2. Current expression (the current mathematical equation the user is building)
+3. A space for syntax error descriptions to be displayed
+4. A "Custom Operations" button
+5. A backspace button
+6. A quit button.
+
+The user has a choice of either entering a basic infix expression with the calculator buttons or selecting a custom operation to begin conducting. 
+
+To begin entering an expression, the user can simply begin pressing buttons on the calculator. This limits the user, for the most part, to only entering acceptable input into the GUI. Through Unity's UI package and inspector configuration, each button signals the InputRelay to deliver the frontend input to one of two backend classes - the InfixExpressionProcessor or the CustomOperationProcessor. If the user is entering an expression, the input will be relayed to the InfixExpressionProcessor, where the current operand and expression will be stored as the user builds each element. Once the user presses the "=" button, the InfixExpressionProcessor will convert the user's entered infix expression to a postfix expression, and then evaluate the postfix expression to return a result. Delegates are used to relay information from backend systems to the frontend. The CalculatorGuiUpdater is subscribed to these delegates, and uses the strings passed from the delegates to update the virtual calculator. The user may repeat this process as many times as they desire.
+
+Alternatively, the user can choose to conduct a custom operation instead of a regular infix expression evaluation. To do this, the user must select the "Custom Operations" button on the home screen of the calculator. They will be presented with a list of custom operations that are available with the release. These custom operations are represented by ScriptableObjects and are configured in the inspector during development. At the start of the program, the CustomOperationsLoader reads a list of all available custom operations, creates an OperationSelectionButton GUI element for each, and loads them into a list viewable by the user on the main calculator screen. This workflow allows developers to very easily add new custom operations, so long as the ScriptableObject they create inherits from CustomOperation. From the loaded list, the user can select a custom operation to load and execute. Custom operations also implement a "ICustomOperation" interface and are children of an abstract CustomOperation class, which ensures that each custom operation has an execute method. Additionally, the class structure ensures that each custom operation has information such as name, description, instructions, and argument labels to be displayed to the player when they are loaded. Once the custom operation is loaded, the InputRelay will update to direct all user input to the CustomOperationProcessor backend class. This class detects how many arguments are being displayed in the frontend to the user, and allows the user to use the calculator buttons to enter argument values to then be passed to the custom operation's execute function. If the custom operation successfully processes the user input, the result will be displayed to the user on the main calculator display. Otherwise, the main display will read "0" and an error message will be displayed. This will help the user to better understand the reason their input was invalid.
+
+##Where to Go Next
+Prototype Design (ADD LINK)
+
+Learn how this application was prototyped in the pure C# environment for proof of concept.

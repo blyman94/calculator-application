@@ -1,6 +1,10 @@
 using UnityEngine;
 
-
+/// <summary>
+/// A custom operation is a mathematical procedure that accepts arguments and
+/// conducts a unique method of calculation on those arguments, returning a
+/// value. New custom operations can be easily added by designers.
+/// </summary>
 public abstract class CustomOperation : ScriptableObject, ICustomOperation
 {
     [Header("Display Screen Information")]
@@ -33,7 +37,7 @@ public abstract class CustomOperation : ScriptableObject, ICustomOperation
         "the custom operation.")]
     [SerializeField] protected string[] argumentLabels;
 
-    [Header ("Input Params")]
+    [Header("Input Params")]
     /// <summary>
     /// Can this custom operation accept decimal (non-integer) values?
     /// </summary>
