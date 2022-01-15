@@ -7,99 +7,9 @@ using UnityEngine;
 /// </summary>
 [CreateAssetMenu(menuName = "Custom Operation.../Pythagorean Solve",
     fileName = "PythagoreanSolve")]
-public class PythagoreanSolve : ScriptableObject, ICustomOperation
+public class PythagoreanSolve : CustomOperation
 {
-    /// <summary>
-    /// A string with the name of the Pythagorean Solve operation.
-    /// </summary>
-    [Tooltip("A string containing instructions for the Pythagorean Solve " +
-        "operation.")]
-    [SerializeField] new private string name;
-
-    /// <summary>
-    /// A string containing a description of the Pythagorean Solve operation.
-    /// </summary>
-    [Tooltip("A string containing a description of the Pythagorean Solve " +
-        "operation.")]
-    [SerializeField] private string description;
-
-    /// <summary>
-    /// A string containing instructions for the Pythagorean Solve operation.
-    /// </summary>
-    [Tooltip("A string containing instructions for the Pythagorean Solve " +
-        "operation.")]
-    [SerializeField] private string instructions;
-
-    /// <summary>
-    /// An array of strings representing the labels for each input to the 
-    /// Pythagorean Solve operation.
-    /// </summary>
-    [Tooltip("An array of strings representing the labels for each input to " +
-        "the Pythagorean Solve operation.")]
-    [SerializeField] private string[] argumentLabels;
-
-    /// <summary>
-    /// Can this custom operation accept decimal (non-integer) values?
-    /// </summary>
-    [Tooltip("Can this custom operation accept decimal (non-integer) values?")]
-    [SerializeField] private bool allowsDecimal;
-
-    /// <summary>
-    /// Can this custom operation accept negative values?
-    /// </summary>
-    [Tooltip("Can this custom operation accept negative values?")]
-    [SerializeField] private bool allowsNegative;
-
-    #region ICustomOperation Methods
-    public bool AllowsDecimal
-    {
-        get
-        {
-            return allowsDecimal;
-        }
-    }
-
-    public bool AllowsNegative
-    {
-        get
-        {
-            return allowsNegative;
-        }
-    }
-
-    public string[] ArgumentLabels
-    {
-        get
-        {
-            return argumentLabels;
-        }
-    }
-
-    public string Description
-    {
-        get
-        {
-            return description;
-        }
-    }
-
-    public string Instructions
-    {
-        get
-        {
-            return instructions;
-        }
-    }
-
-    public string Name
-    {
-        get
-        {
-            return name;
-        }
-    }
-
-    public string Execute(string[] inputs)
+    public override string Execute(string[] inputs)
     {
         float.TryParse(inputs[0], out float a);
         float.TryParse(inputs[1], out float b);
@@ -176,5 +86,4 @@ public class PythagoreanSolve : ScriptableObject, ICustomOperation
                 "inputs given for Pythagorean Solve operation.");
         }
     }
-    #endregion
 }

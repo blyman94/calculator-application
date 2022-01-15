@@ -14,25 +14,25 @@ public class Calculator
     /// </summary>
     public float CurrentValue;
 
-    /// <summary>
-    /// String containing all accepted primitive operators for infix expression 
-    /// evaluation.
-    /// </summary>
-    public string Operators = "^*/+-()";
-
     // Operator Precedence and Associativity
-
-    /// <summary>
-    /// Dictionary to retrieve precedence value of an operator represented as a
-    /// string.
-    /// </summary>
-    private Dictionary<string, int> precedence;
 
     /// <summary>
     /// Dictionary to retrieve the associativity behavior of an operator 
     /// represented as a string.
     /// </summary>
     private Dictionary<string, bool> leftAssociative;
+
+    /// <summary>
+    /// String containing all accepted primitive operators for infix expression 
+    /// evaluation.
+    /// </summary>
+    private string operators = "^*/+-()";
+
+    /// <summary>
+    /// Dictionary to retrieve precedence value of an operator represented as a
+    /// string.
+    /// </summary>
+    private Dictionary<string, int> precedence;
 
     /// <summary>
     /// Parameterless constructor for the Calculator class. Initializes the 
@@ -43,8 +43,8 @@ public class Calculator
     public Calculator()
     {
         CurrentValue = 0;
-        AssignPrecedenceValues();
         AssignLeftAssociativeValues();
+        AssignPrecedenceValues();
     }
 
     /// <summary>
@@ -75,7 +75,7 @@ public class Calculator
         foreach (string token in postfixExpression)
         {
             bool isOperand = float.TryParse(token, out float operand);
-            bool isOperator = Operators.Contains(token);
+            bool isOperator = operators.Contains(token);
 
             if (isOperand)
             {
@@ -138,7 +138,7 @@ public class Calculator
         {
             string token = infixExpression[i];
             bool isOperand = float.TryParse(token, out float operand);
-            bool isOperator = Operators.Contains(token);
+            bool isOperator = operators.Contains(token);
 
             if (isOperand)
             {

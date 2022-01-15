@@ -1,7 +1,5 @@
 ﻿using CalculatorLibrary;
 
-// TODO: Update documentation to reflect any changes in prototype methodology. 
-
 /// <summary>
 /// Console application simulating a calculator. Allows the user to enter an 
 /// infix expression, then evaluates that expression, printing the result of the
@@ -30,7 +28,7 @@ class CalculatorApplication
             Console.WriteLine(calculator.CurrentValue.ToString());
             Console.WriteLine();
             Console.WriteLine("Enter an Expression delimited by space.");
-            Console.WriteLine("Available Custom Functions: Factorial <F>, " + 
+            Console.WriteLine("Available Custom Functions: Factorial <F>, " +
                 "Metric Conversion <M>, Pythagorean Solve<P>");
             Console.WriteLine("Enter <C> to clear current value.");
             Console.WriteLine("Press <Enter> key without entering anything to exit.");

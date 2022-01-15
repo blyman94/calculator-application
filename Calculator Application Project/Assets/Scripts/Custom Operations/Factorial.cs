@@ -6,99 +6,10 @@ using UnityEngine;
 /// </summary>
 [CreateAssetMenu(menuName = "Custom Operation.../Factorial",
     fileName = "Factorial")]
-public class Factorial : ScriptableObject, ICustomOperation
+public class Factorial : CustomOperation
 {
-    /// <summary>
-    /// A string with the name of the Factorial operation.
-    /// </summary>
-    [Tooltip("A string containing instructions for the Factorial " +
-        "operation.")]
-    [SerializeField] new private string name;
-
-    /// <summary>
-    /// A string containing a description of the Factorial operation.
-    /// </summary>
-    [Tooltip("A string containing a description of the Factorial " +
-        "operation.")]
-    [SerializeField] private string description;
-
-    /// <summary>
-    /// A string containing instructions for the Factorial operation.
-    /// </summary>
-    [Tooltip("A string containing instructions for the Factorial " +
-        "operation.")]
-    [SerializeField] private string instructions;
-
-    /// <summary>
-    /// An array of strings representing the labels for each input to the 
-    /// Factorial operation.
-    /// </summary>
-    [Tooltip("An array of strings representing the labels for each input to " +
-        "the Factorial operation.")]
-    [SerializeField] private string[] argumentLabels;
-
-    /// <summary>
-    /// Can this custom operation accept decimal (non-integer) values?
-    /// </summary>
-    [Tooltip("Can this custom operation accept decimal (non-integer) values?")]
-    [SerializeField] private bool allowsDecimal;
-
-    /// <summary>
-    /// Can this custom operation accept negative values?
-    /// </summary>
-    [Tooltip("Can this custom operation accept negative values?")]
-    [SerializeField] private bool allowsNegative;
-
     #region ICustomOperation Methods
-    public bool AllowsDecimal
-    {
-        get
-        {
-            return allowsDecimal;
-        }
-    }
-    
-    public bool AllowsNegative
-    {
-        get
-        {
-            return allowsNegative;
-        }
-    }
-    
-    public string[] ArgumentLabels
-    {
-        get
-        {
-            return argumentLabels;
-        }
-    }
-    
-    public string Description
-    {
-        get
-        {
-            return description;
-        }
-    }
-
-    public string Instructions
-    {
-        get
-        {
-            return instructions;
-        }
-    }
-
-    public string Name
-    {
-        get
-        {
-            return name;
-        }
-    }
-
-    public string Execute(string[] inputs)
+    public override string Execute(string[] inputs)
     {
         int n = int.Parse(inputs[0]);
 
@@ -111,6 +22,7 @@ public class Factorial : ScriptableObject, ICustomOperation
             return CalculateFactorial(n).ToString();
         }
     }
+    #endregion
 
     /// <summary>
     /// Uses recursion to calculate the factorial of a given integer n. The exit
@@ -131,5 +43,4 @@ public class Factorial : ScriptableObject, ICustomOperation
             return n * CalculateFactorial(n - 1);
         }
     }
-    #endregion
 }
