@@ -35,3 +35,6 @@ Information regarding the [conversion of infix expressions to postfix expression
 Information regarding the [evaluation of postfix expressions](https://runestone.academy/ns/books/published//pythonds/BasicDS/InfixPrefixandPostfixExpressions.html) was collected from Runestone.Academy.
 ## Licensing
 MIT License. Please read the LICENSE file for more information on licensing.
+
+## Found a Bug?
+Send an email to blyman94@comcast.net and I will include the fix in the next release!
