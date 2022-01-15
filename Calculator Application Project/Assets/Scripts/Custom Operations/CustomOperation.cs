@@ -3,6 +3,7 @@ using UnityEngine;
 
 public abstract class CustomOperation : ScriptableObject, ICustomOperation
 {
+    [Header("Display Screen Information")]
     /// <summary>
     /// A string with the name of the custom operation.
     /// </summary>
@@ -32,6 +33,7 @@ public abstract class CustomOperation : ScriptableObject, ICustomOperation
         "the custom operation.")]
     [SerializeField] protected string[] argumentLabels;
 
+    [Header ("Input Params")]
     /// <summary>
     /// Can this custom operation accept decimal (non-integer) values?
     /// </summary>

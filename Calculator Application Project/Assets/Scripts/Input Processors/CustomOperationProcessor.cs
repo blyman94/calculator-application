@@ -30,13 +30,13 @@ public class CustomOperationProcessor : MonoBehaviour, IInputProcessor
     /// Event used to signal the custom operation has been executed.
     /// </summary>
     [Tooltip("Event used to signal the custom operation has been executed.")]
-    [SerializeField] private GameEvent ExecuteCustomOperationEvent;
+    [SerializeField] private GameEvent executeCustomOperationEvent;
 
     /// <summary>
     /// Event used to signal the custom operation has been been canceled
     /// </summary>
     [Tooltip("Event used to signal the custom operation has been canceled.")]
-    [SerializeField] private GameEvent HideCustomOperationDialogEvent;
+    [SerializeField] private GameEvent hideCustomOperationDialogEvent;
 
     /// <summary>
     /// Array of arguments to be passed to the custom operation.
@@ -221,7 +221,7 @@ public class CustomOperationProcessor : MonoBehaviour, IInputProcessor
             CurrentArgumentIndex--;
             if (CurrentArgumentIndex < 0)
             {
-                HideCustomOperationDialogEvent.Raise();
+                hideCustomOperationDialogEvent.Raise();
             }
             else
             {
@@ -292,7 +292,7 @@ public class CustomOperationProcessor : MonoBehaviour, IInputProcessor
                 UpdateError?.Invoke(e.Message);
                 UpdateCurrentOperand?.Invoke("");
             }
-            ExecuteCustomOperationEvent.Raise();
+            executeCustomOperationEvent.Raise();
         }
     }
 

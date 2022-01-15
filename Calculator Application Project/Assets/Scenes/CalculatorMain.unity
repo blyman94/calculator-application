@@ -2337,8 +2337,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   infixExpressionProcessor: {fileID: 1478960032}
-  ExecuteCustomOperationEvent: {fileID: 11400000, guid: e54ab03576b54f649aa39595e8bf811c, type: 2}
-  HideCustomOperationDialogEvent: {fileID: 11400000, guid: 7e3d6d05ec8f20c489d7cf46c69a21d9, type: 2}
+  executeCustomOperationEvent: {fileID: 11400000, guid: e54ab03576b54f649aa39595e8bf811c, type: 2}
+  hideCustomOperationDialogEvent: {fileID: 11400000, guid: 7e3d6d05ec8f20c489d7cf46c69a21d9, type: 2}
 --- !u!114 &339402435
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2747,7 +2747,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 215.85
+  m_fontSize: 215.3
   m_fontSizeBase: 224
   m_fontWeight: 400
   m_enableAutoSizing: 1
