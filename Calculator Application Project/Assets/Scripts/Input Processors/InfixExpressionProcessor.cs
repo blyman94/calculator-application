@@ -280,12 +280,16 @@ public class InfixExpressionProcessor : MonoBehaviour, IInputProcessor
     {
         try
         {
+            if (CurrentOperand == "" && operators.Contains(CurrentExpression.Last()))
+            {
+                return;
+            }
             if (CurrentOperand != "")
             {
                 CurrentExpression.Add(CurrentOperand);
             }
 
-            string result = 
+            string result =
                 calculator.AcceptInputArray(CurrentExpression.ToArray());
 
             UpdateCurrentExpression?.Invoke(string.Join(" ",
@@ -317,8 +321,8 @@ public class InfixExpressionProcessor : MonoBehaviour, IInputProcessor
                 CurrentOperand = "";
                 IsResult = false;
                 UpdateCurrentOperand?.Invoke("0");
-                UpdateError?.Invoke("Scientific Notation Error: The " + 
-                    "expression evaluates to a number in scientific " + 
+                UpdateError?.Invoke("Scientific Notation Error: The " +
+                    "expression evaluates to a number in scientific " +
                     "notation, which this calculator does not support :(");
                 return;
             }
