@@ -11,16 +11,25 @@ public class Factorial : CustomOperation
     #region ICustomOperation Methods
     public override string Execute(string[] inputs)
     {
-        int n = int.Parse(inputs[0]);
+        bool success = int.TryParse(inputs[0], out int n);
 
-        if (n == 0)
+        if (success)
         {
-            return "1";
+            if (n == 0)
+            {
+                return "1";
+            }
+            else
+            {
+                return CalculateFactorial(n).ToString();
+            }
         }
         else
         {
-            return CalculateFactorial(n).ToString();
+            return "0";
         }
+
+
     }
     #endregion
 

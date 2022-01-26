@@ -296,6 +296,10 @@ public class InfixExpressionProcessor : MonoBehaviour, IInputProcessor
     {
         try
         {
+            if (CurrentOperand == "" && CurrentExpression.IsEmpty())
+            {
+                return;
+            }
             if (CurrentOperand == "" && operators.Contains(CurrentExpression.Last()))
             {
                 return;

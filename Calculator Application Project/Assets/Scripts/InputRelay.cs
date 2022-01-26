@@ -22,7 +22,7 @@ public class InputRelay : MonoBehaviour
     /// Infix expression processor for regular infix expression evaluation 
     /// operations.
     /// </summary>
-    [Tooltip("Infix expression processor for infix expression evaluation " + 
+    [Tooltip("Infix expression processor for infix expression evaluation " +
         "operations.")]
     [SerializeField] private InfixExpressionProcessor infixExpressionProcessor;
 
@@ -215,7 +215,7 @@ public class InputRelay : MonoBehaviour
             if (infixExpressionProcessor != null)
             {
                 infixExpressionProcessor.ToggleNegative();
-            }   
+            }
         }
     }
 }
