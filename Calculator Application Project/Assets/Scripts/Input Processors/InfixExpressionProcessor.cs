@@ -8,6 +8,22 @@ using UnityEngine;
 public class InfixExpressionProcessor : MonoBehaviour, IInputProcessor
 {
     /// <summary>
+    /// Event to be raised when evaluation of the infix expression is 
+    /// successful.
+    /// </summary>
+    [Tooltip("Event to be raised when evaluation of the infix expression is " +
+        "successful.")]
+    [SerializeField] private GameEvent calculationSuccessEvent;
+
+    /// <summary>
+    /// Event to be raised when evaluation of the infix expression is 
+    /// not successful.
+    /// </summary>
+    [Tooltip("Event to be raised when evaluation of the infix expression is " +
+        "not successful.")]
+    [SerializeField] private GameEvent calculationUnsuccessEvent;
+
+    /// <summary>
     /// True if the calculator has already been cleared once.
     /// </summary>
     public bool ClearedOnce { get; set; }
@@ -303,6 +319,7 @@ public class InfixExpressionProcessor : MonoBehaviour, IInputProcessor
                 UpdateCurrentOperand?.Invoke("0");
                 UpdateError?.Invoke("Infinity Error: The expression " +
                     "evaluates to Infinity (and beyond!).");
+                calculationUnsuccessEvent.Raise();
                 return;
             }
 
@@ -313,6 +330,7 @@ public class InfixExpressionProcessor : MonoBehaviour, IInputProcessor
                 UpdateCurrentOperand?.Invoke("0");
                 UpdateError?.Invoke("Not a Number Error: The expression " +
                     "evaluates to NaN (and not the delicious, doughy kind!).");
+                calculationUnsuccessEvent.Raise();
                 return;
             }
 
@@ -324,6 +342,7 @@ public class InfixExpressionProcessor : MonoBehaviour, IInputProcessor
                 UpdateError?.Invoke("Scientific Notation Error: The " +
                     "expression evaluates to a number in scientific " +
                     "notation, which this calculator does not support :(");
+                calculationUnsuccessEvent.Raise();
                 return;
             }
 
@@ -331,9 +350,11 @@ public class InfixExpressionProcessor : MonoBehaviour, IInputProcessor
             IsResult = true;
             UpdateCurrentOperand?.Invoke(CurrentOperand);
             UpdateError?.Invoke("");
+            calculationSuccessEvent.Raise();
         }
         catch (CalculatorException e)
         {
+            calculationUnsuccessEvent.Raise();
             UpdateError?.Invoke(e.Message);
             Reset();
         }

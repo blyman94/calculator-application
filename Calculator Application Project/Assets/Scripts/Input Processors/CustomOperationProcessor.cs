@@ -27,6 +27,22 @@ public class CustomOperationProcessor : MonoBehaviour, IInputProcessor
 
     [Header("Events")]
     /// <summary>
+    /// Event to be raised when evaluation of the custom operation is 
+    /// successful.
+    /// </summary>
+    [Tooltip("Event to be raised when evaluation of the custom operation is " +
+        "successful.")]
+    [SerializeField] private GameEvent calculationSuccessEvent;
+
+    /// <summary>
+    /// Event to be raised when evaluation of the custom operation is not 
+    /// successful.
+    /// </summary>
+    [Tooltip("Event to be raised when evaluation of the custom operation is " +
+        "not successful.")]
+    [SerializeField] private GameEvent calculationUnsuccessEvent;
+
+    /// <summary>
     /// Event used to signal the custom operation has been executed.
     /// </summary>
     [Tooltip("Event used to signal the custom operation has been executed.")]
@@ -285,12 +301,14 @@ public class CustomOperationProcessor : MonoBehaviour, IInputProcessor
                 UpdateCurrentOperand?.Invoke(result);
                 infixExpressionProcessor.CurrentOperand = result;
                 infixExpressionProcessor.IsResult = true;
+                calculationSuccessEvent.Raise();
                 UpdateError?.Invoke("");
             }
             catch (CalculatorException e)
             {
+                calculationUnsuccessEvent.Raise();
                 UpdateError?.Invoke(e.Message);
-                UpdateCurrentOperand?.Invoke("");
+                UpdateCurrentOperand?.Invoke("0");
             }
             executeCustomOperationEvent.Raise();
         }

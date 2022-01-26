@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 /// <summary>
@@ -17,6 +18,12 @@ public class MusicSource : MonoBehaviour
     /// </summary>
     [Tooltip("Audio Source through which the music will be played.")]
     [SerializeField] private AudioSource musicSource;
+
+    /// <summary>
+    /// Reference to the text of the mute/unmute button to update.
+    /// </summary>
+    [Tooltip("Reference to the text of the mute/unmute button to update.")]
+    [SerializeField] private TextMeshProUGUI muteButtonText;
 
     [Header("Silence")]
     /// <summary>
@@ -52,15 +59,21 @@ public class MusicSource : MonoBehaviour
     [SerializeField] private AudioClip silenceClip;
 
     /// <summary>
+    /// Index of the song currently playing.
+    /// </summary>
+    private int currentTrackIndex;
+
+    /// <summary>
     /// Number of times the silent clip has been repeated.
     /// </summary>
     private int silenceReps;
 
     /// <summary>
-    /// Index of the song currently playing.
+    /// Volume of the music when playing.
     /// </summary>
-    private int currentTrackIndex;
+    private float volume;
 
+    #region MonoBehaviour Methods
     // Start is called before the first frame update
     void Start()
     {
@@ -74,7 +87,7 @@ public class MusicSource : MonoBehaviour
             {
                 currentTrackIndex = 0;
             }
-
+            volume = musicSource.volume;
             musicSource.clip = clipsToCycle[currentTrackIndex];
             musicSource.Play();
         }
@@ -115,6 +128,24 @@ public class MusicSource : MonoBehaviour
             }
 
             musicSource.Play();
+        }
+    }
+    #endregion
+
+    /// <summary>
+    /// Toggles mute state of the calculator music.
+    /// </summary>
+    public void ToggleMute()
+    {
+        if (musicSource.volume == 0)
+        {
+            musicSource.volume = volume;
+            muteButtonText.text = "Mute";
+        }
+        else
+        {
+            musicSource.volume = 0;
+            muteButtonText.text = "Unmute";
         }
     }
 }
